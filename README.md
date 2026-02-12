@@ -34,3 +34,20 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Key Design Decisions
+
+### 1. Reservation vs. Game Session
+To maintain flexibility, we distinguish between physical space and game content:
+- **Reservation:** A logistical entity. A Member books a specific **Table** for a time block. This prevents double-booking the physical space.
+- **GameSession:** An optional content layer. If a session is intended to be public (e.g., a DM running a one-shot), a `GameSession` is attached to the `Reservation`. This populates the public calendar with details like Game System, Max Players, and Description.
+- *Note:* Private games only require a `Reservation`.
+
+### 2. User Roles & Permissions
+We use a tiered `UserRole` system (`USER`, `MEMBER`, `ADMIN`):
+- **USER:** Public access. Can view the calendar and public game details.
+- **MEMBER:** Can create and manage their own `Reservations` and `GameSessions`.
+- **ADMIN:** Full control over all reservations, tables, and user management.
+
+### 3. Table Management
+The system is designed around specific physical entities. The `Table` entity allows for future-proofing (e.g., adding more tables or specific table features) and ensures that every booking is tied to a concrete location in the venue.
