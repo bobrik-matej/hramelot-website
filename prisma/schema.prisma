@@ -9,15 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
+  provider = "postgresql"
 }
 
 // --- Enums ---
 
 enum UserRole {
-  USER    // Public user: can browse and register for games
-  MEMBER  // Club Member: can reserve tables
-  ADMIN   // Admin: can manage tables and users
+  USER // Public user: can browse and register for games
+  MEMBER // Club Member: can reserve tables
+  ADMIN // Admin: can manage tables and users
 }
 
 enum RegistrationStatus {
@@ -99,7 +99,7 @@ model VerificationToken {
 /// A physical table in the club that can be reserved.
 model Table {
   id           String        @id @default(cuid())
-  name         String        // e.g., "Table 1 (Window)", "War Room"
+  name         String // e.g., "Table 1 (Window)", "War Room"
   capacity     Int           @default(6)
   reservations Reservation[]
 }
@@ -107,7 +107,7 @@ model Table {
 /// A booking of a physical table by a user (typically a Member or DM).
 model Reservation {
   id        String   @id @default(cuid())
-  title     String   // Internal name e.g. "Bob's Campaign"
+  title     String // Internal name e.g. "Bob's Campaign"
   startTime DateTime
   endTime   DateTime
 
@@ -130,9 +130,9 @@ model Reservation {
 /// Public-facing details for a game scheduled at a reserved table.
 model GameSession {
   id          String  @id @default(cuid())
-  title       String  // Public title e.g. "Curse of Strahd: Session 1"
+  title       String // Public title e.g. "Curse of Strahd: Session 1"
   description String? @db.Text
-  system      String  // e.g. "D&D 5e", "Pathfinder 2e"
+  system      String // e.g. "D&D 5e", "Pathfinder 2e"
   image       String? // URL to a cover image
   minPlayers  Int     @default(3)
   maxPlayers  Int     @default(5)
