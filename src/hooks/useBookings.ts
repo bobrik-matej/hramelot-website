@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {useQuery, useMutation, useQueryClient} from '@tanstack/react-query';
 
 interface Booking {
     id: string;
@@ -11,7 +11,7 @@ interface Booking {
 export const useBookings = () => {
     const queryClient = useQueryClient();
 
-    const { data: bookings, isLoading } = useQuery({
+    const {data: bookings, isLoading} = useQuery({
         queryKey: ['bookings'],
         queryFn: async () => {
             const response = await fetch('/api/bookings');
@@ -24,14 +24,14 @@ export const useBookings = () => {
         mutationFn: async (data: Omit<Booking, 'id'>) => {
             const response = await fetch('/api/bookings', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data),
             });
             if (!response.ok) throw new Error('Failed to create booking');
             return response.json();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['bookings'] });
+            queryClient.invalidateQueries({queryKey: ['bookings']});
         },
     });
 

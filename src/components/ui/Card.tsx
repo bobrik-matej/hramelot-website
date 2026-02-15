@@ -1,12 +1,12 @@
-import { HTMLAttributes, forwardRef } from 'react';
-import { clsx } from 'clsx';
+import {HTMLAttributes, forwardRef} from 'react';
+import {clsx} from 'clsx';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
     variant?: 'default' | 'outlined';
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
-    ({ className, variant = 'default', children, ...props }, ref) => {
+    ({className, variant = 'default', children, ...props}, ref) => {
         return (
             <div
                 ref={ref}
@@ -26,14 +26,14 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
 
 Card.displayName = 'Card';
 
-export const CardHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+export const CardHeader = ({className, ...props}: HTMLAttributes<HTMLDivElement>) => (
     <div className={clsx('flex flex-col space-y-1.5 p-6', className)} {...props} />
 );
 
-export const CardTitle = ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+export const CardTitle = ({className, ...props}: HTMLAttributes<HTMLHeadingElement>) => (
     <h3 className={clsx('text-2xl font-semibold leading-none tracking-tight', className)} {...props} />
 );
 
-export const CardContent = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+export const CardContent = ({className, ...props}: HTMLAttributes<HTMLDivElement>) => (
     <div className={clsx('p-6 pt-0', className)} {...props} />
 );
