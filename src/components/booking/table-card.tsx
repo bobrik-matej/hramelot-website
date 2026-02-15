@@ -45,7 +45,7 @@ export const TableCard = ({ id, name, capacity, available, currentBooking, onBoo
                         </div>
                     ) : (
                         <Button
-                            variant="primary"
+                            variant="outline"
                             className="w-full"
                             onClick={() => onBook?.(id)}
                             disabled={!available}

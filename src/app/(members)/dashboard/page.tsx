@@ -4,12 +4,14 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { CalendarDays, User, BookOpen } from "lucide-react";
 
 export default async function DashboardPage() {
-    const session = await auth();
-
-    // Protect the route
-    if (!session?.user) {
-        redirect("/api/auth/signin");
-    }
+    // Temporary: Mock session for development
+    const session = {
+        user: {
+            name: "Gandalf the Grey",
+            role: "Dungeon Master",
+            email: "gandalf@hramelot.local",
+        }
+    };
 
     const user = session.user;
 
