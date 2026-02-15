@@ -15,7 +15,7 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
             {/* Public Link */}
             <Link
-                href="/public/calendar"
+                href="/calendar"
                 className="rounded-full bg-black px-6 py-3 text-sm font-semibold text-white transition-hover hover:bg-zinc-800 dark:bg-white dark:text-black dark:hover:bg-zinc-200"
             >
               View Game Calendar
