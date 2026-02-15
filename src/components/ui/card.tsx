@@ -37,3 +37,7 @@ export const CardTitle = ({className, ...props}: HTMLAttributes<HTMLHeadingEleme
 export const CardContent = ({className, ...props}: HTMLAttributes<HTMLDivElement>) => (
     <div className={clsx('p-6 pt-0', className)} {...props} />
 );
+
+export const CardDescription = ({className, ...props}: HTMLAttributes<HTMLParagraphElement>) => (
+    <p className={clsx('text-sm text-muted-foreground', className)} {...props} />
+);

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/Card"; // Assuming you have some UI components
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"; // Assuming you have some UI components
 import { CalendarDays, User, BookOpen } from "lucide-react";
 
 export default async function DashboardPage() {
