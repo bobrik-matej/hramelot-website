@@ -1,81 +1,117 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Badge } from "@/components/ui/badge";
+
+type Reservation = {
+    id: string;
+    title: string;
+    startTime: string;
+    endTime: string;
+    table: {
+        name: string;
+        capacity: number;
+    };
+    user: {
+        name: string;
+        email: string;
+    };
+};
 
 export default function ReservationsPage() {
-    const [date, setDate] = useState<Date | undefined>(new Date());
+    const [reservations, setReservations] = useState<Reservation[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    // Placeholder: Replace with actual reservation data
-    const reservations = [
-        { id: 1, date: "2026-02-20", time: "18:00", table: "Main Hall", status: "confirmed" },
-        { id: 2, date: "2026-02-27", time: "19:00", table: "Dragon's Den", status: "pending" },
-    ];
+    // Fetch reservations
+    useEffect(() => {
+        async function fetchReservations() {
+            try {
+                const response = await fetch("/api/reservations");
+                if (!response.ok) throw new Error("Failed to fetch");
+                const data = await response.json();
+                setReservations(data);
+            } catch (err) {
+                setError("Could not load reservations");
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchReservations();
+    }, []);
+
+    // Simple form submission
+    async function handleCreateReservation() {
+        // For POC: hardcoded values - replace with real form inputs
+        const newReservation = {
+            title: "Test Reservation",
+            startTime: new Date("2026-03-01T18:00:00").toISOString(),
+            endTime: new Date("2026-03-01T21:00:00").toISOString(),
+            tableId: "replace-with-real-table-id", // You need to create a table first
+            userId: "replace-with-real-user-id", // You need a real user ID
+        };
+
+        try {
+            const response = await fetch("/api/reservations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newReservation),
+            });
+
+            if (!response.ok) throw new Error("Failed to create");
+
+            const created = await response.json();
+            setReservations([created, ...reservations]);
+            alert("Reservation created!");
+        } catch (err) {
+            alert("Failed to create reservation");
+            console.error(err);
+        }
+    }
+
+    if (loading) return <div className="p-8">Loading...</div>;
+    if (error) return <div className="p-8 text-red-500">{error}</div>;
 
     return (
-        <div className="container mx-auto py-8">
-            <div className="grid md:grid-cols-2 gap-6">
-                {/* Reservation Calendar */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Book a Table</CardTitle>
-                        <CardDescription>Select a date for your reservation</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        <Calendar
-                            mode="single"
-                            selected={date}
-                            onSelect={setDate}
-                            className="rounded-md border"
-                        />
-                        {date && (
-                            <div className="space-y-2">
-                                <p className="text-sm font-medium">Available Time Slots:</p>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button variant="outline" size="sm">17:00</Button>
-                                    <Button variant="outline" size="sm">18:00</Button>
-                                    <Button variant="outline" size="sm">19:00</Button>
-                                    <Button variant="outline" size="sm">20:00</Button>
-                                </div>
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
+        <div className="container mx-auto py-8 px-4">
+            <Card>
+                <CardHeader>
+                    <CardTitle>Reservations</CardTitle>
+                    <CardDescription>View and manage table reservations</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Button onClick={handleCreateReservation} className="mb-4">
+                        Create Test Reservation
+                    </Button>
 
-                {/* My Reservations */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>My Reservations</CardTitle>
-                        <CardDescription>Upcoming table bookings</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="space-y-4">
-                            {reservations.map((reservation) => (
-                                <div key={reservation.id} className="flex items-center justify-between p-4 border rounded-lg">
-                                    <div>
-                                        <p className="font-medium">{reservation.table}</p>
-                                        <p className="text-sm text-muted-foreground">
-                                            {reservation.date} at {reservation.time}
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-2 items-center">
-                                        <Badge variant={reservation.status === "confirmed" ? "default" : "secondary"}>
-                                            {reservation.status}
-                                        </Badge>
-                                        <Button variant="ghost" size="sm">Cancel</Button>
-                                    </div>
+                    <div className="space-y-4">
+                        {reservations.length === 0 ? (
+                            <p className="text-muted-foreground">No reservations yet</p>
+                        ) : (
+                            reservations.map((reservation) => (
+                                <div
+                                    key={reservation.id}
+                                    className="border p-4 rounded-lg"
+                                >
+                                    <h3 className="font-bold">{reservation.title}</h3>
+                                    <p className="text-sm text-muted-foreground">
+                                        Table: {reservation.table.name} (Capacity: {reservation.table.capacity})
+                                    </p>
+                                    <p className="text-sm">
+                                        {new Date(reservation.startTime).toLocaleString()} - {new Date(reservation.endTime).toLocaleString()}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        Reserved by: {reservation.user.name}
+                                    </p>
                                 </div>
-                            ))}
-                            {reservations.length === 0 && (
-                                <p className="text-center text-muted-foreground py-8">No reservations yet</p>
-                            )}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+                            ))
+                        )}
+                    </div>
+                </CardContent>
+            </Card>
         </div>
     );
 }
