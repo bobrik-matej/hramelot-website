@@ -2,21 +2,29 @@ import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
+import type { UserRole } from "@/generated/prisma/client";
 
-// Import from your custom Prisma client location
-import type { UserRole } from "@/generated/prisma/enums";
+// Validate environment variables
+const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
+const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
+const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID;
+const DISCORD_ADMIN_ROLE_ID = process.env.DISCORD_ADMIN_ROLE_ID;
+const DISCORD_MEMBER_ROLE_ID = process.env.DISCORD_MEMBER_ROLE_ID;
+
+if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
+    throw new Error("Missing Discord OAuth credentials");
+}
 
 // Helper function to fetch Discord guild member data
 async function fetchDiscordGuildMember(accessToken: string) {
-    const guildId = process.env.DISCORD_GUILD_ID;
-    if (!guildId) {
-        console.error("DISCORD_GUILD_ID is not set");
+    if (!DISCORD_GUILD_ID) {
+        console.warn("⚠️ DISCORD_GUILD_ID is not set - role sync disabled");
         return null;
     }
 
     try {
         const response = await fetch(
-            `https://discord.com/api/v10/users/@me/guilds/${guildId}/member`,
+            `https://discord.com/api/v10/users/@me/guilds/${DISCORD_GUILD_ID}/member`,
             {
                 headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -25,11 +33,21 @@ async function fetchDiscordGuildMember(accessToken: string) {
         );
 
         if (!response.ok) {
-            console.error("Failed to fetch guild member:", response.statusText);
+            const text = await response.text();
+            console.error("Failed to fetch guild member:", {
+                status: response.status,
+                statusText: response.statusText,
+                body: text,
+            });
             return null;
         }
 
-        return await response.json();
+        const data = await response.json();
+        console.log("✅ Fetched Discord member data:", {
+            userId: data.user?.id,
+            roles: data.roles?.length || 0,
+        });
+        return data;
     } catch (error) {
         console.error("Error fetching Discord guild member:", error);
         return null;
@@ -38,14 +56,17 @@ async function fetchDiscordGuildMember(accessToken: string) {
 
 // Helper function to map Discord roles to app roles
 function mapDiscordRolesToAppRole(discordRoles: string[]): UserRole {
-    const adminRoleId = process.env.DISCORD_ADMIN_ROLE_ID;
-    const memberRoleId = process.env.DISCORD_MEMBER_ROLE_ID;
+    console.log("🔍 Mapping roles:", {
+        discordRoles,
+        adminRoleId: DISCORD_ADMIN_ROLE_ID,
+        memberRoleId: DISCORD_MEMBER_ROLE_ID,
+    });
 
-    if (adminRoleId && discordRoles.includes(adminRoleId)) {
+    if (DISCORD_ADMIN_ROLE_ID && discordRoles.includes(DISCORD_ADMIN_ROLE_ID)) {
         return "ADMIN";
     }
 
-    if (memberRoleId && discordRoles.includes(memberRoleId)) {
+    if (DISCORD_MEMBER_ROLE_ID && discordRoles.includes(DISCORD_MEMBER_ROLE_ID)) {
         return "MEMBER";
     }
 
@@ -56,38 +77,44 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     adapter: PrismaAdapter(db),
     providers: [
         Discord({
-            clientId: process.env.DISCORD_CLIENT_ID!,
-            clientSecret: process.env.DISCORD_CLIENT_SECRET!,
+            clientId: DISCORD_CLIENT_ID,
+            clientSecret: DISCORD_CLIENT_SECRET,
             authorization: {
                 params: {
-                    scope: "identify email guilds guilds.members.read"
-                }
+                    scope: "identify email guilds guilds.members.read",
+                },
             },
         }),
     ],
     callbacks: {
-        async signIn({ user, account }) {
-            // Fetch Discord guild member data when user signs in
+        async signIn({ user, account, profile }) {
+            console.log("🔐 Sign-in callback triggered:", {
+                userId: user?.id,
+                email: user?.email,
+                provider: account?.provider,
+                hasAccessToken: !!account?.access_token,
+            });
+
+            // Sync Discord roles on sign-in
             if (account?.provider === "discord" && account.access_token && user?.id) {
-                const guildMember = await fetchDiscordGuildMember(account.access_token);
+                try {
+                    const guildMember = await fetchDiscordGuildMember(account.access_token);
 
-                if (guildMember && guildMember.roles && Array.isArray(guildMember.roles)) {
-                    // Map Discord roles to app role
-                    const appRole = mapDiscordRolesToAppRole(guildMember.roles);
+                    if (guildMember?.roles && Array.isArray(guildMember.roles)) {
+                        const appRole = mapDiscordRolesToAppRole(guildMember.roles);
 
-                    // Update user role in database
-                    try {
                         await db.user.update({
                             where: { id: user.id },
-                            data: {
-                                role: appRole,
-                            },
+                            data: { role: appRole },
                         });
 
                         console.log(`✅ Synced roles for ${user.email}: ${appRole}`);
-                    } catch (error) {
-                        console.error("Failed to update user role:", error);
+                    } else {
+                        console.warn(`⚠️ User ${user.email} not in guild or has no roles`);
                     }
+                } catch (error) {
+                    console.error("❌ Failed to sync Discord roles:", error);
+                    // Don't block sign-in on role sync failure
                 }
             }
 
@@ -95,25 +122,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
 
         async session({ session, user }) {
-            if (session?.user && user?.id) {
-                // Fetch fresh user data from database (includes role)
-                const dbUser = await db.user.findUnique({
-                    where: { id: user.id },
-                    select: {
-                        id: true,
-                        role: true,
-                        name: true,
-                        email: true,
-                        image: true,
-                    },
-                });
-
-                if (dbUser) {
-                    session.user.id = dbUser.id;
-                    session.user.role = dbUser.role;
-                }
+            // With the Database strategy and PrismaAdapter,
+            // 'user' is the object from your database.
+            if (session.user && user) {
+                session.user.id = user.id;
+                session.user.role = (user as any).role; // Mapping the DB role to the session
             }
             return session;
         },
+    },
+    debug: process.env.NODE_ENV === "development",
+    session: {
+        strategy: "database", // Auth.js v5 with Prisma adapter uses database sessions
     },
 });
