@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import Discord from "next-auth/providers/discord";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { db } from "@/lib/db";
-import type { UserRole } from "@/generated/prisma/client";
+import type { UserRole } from "@prisma/client";
 
 // Validate environment variables
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
