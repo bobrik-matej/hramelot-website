@@ -74,7 +74,7 @@ function mapDiscordRolesToAppRole(discordRoles: string[]): UserRole {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-    adapter: PrismaAdapter(db),
+    adapter: PrismaAdapter(db as any),
     providers: [
         Discord({
             clientId: DISCORD_CLIENT_ID,
