@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"; // Assuming you have some UI components
 import { CalendarDays, User, BookOpen } from "lucide-react";
+import ExampleUsage from "@/components/example-usage";
 
 export default async function DashboardPage() {
     // Temporary: Mock session for development
@@ -23,6 +24,8 @@ export default async function DashboardPage() {
                     You are currently logged in as a <span className="font-semibold text-primary">{user.role || "Member"}</span> of Hramelot.
                 </p>
             </header>
+
+            <ExampleUsage />
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* Quick Actions / Stats */}
