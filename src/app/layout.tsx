@@ -1,7 +1,6 @@
-import type {Metadata} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/layout/navbar";
 import Footer from "@/components/layout/footer";
@@ -23,20 +22,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
                                        children,
-                                   }: Readonly<{
-    children: React.ReactNode;
-}>) {
+                                   }: Readonly<{ children: React.ReactNode }>) {
     return (
-        <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-        <body
-            className={`flex min-h-screen flex-col ${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
+        <html lang="en" className="dark" suppressHydrationWarning>
+        <body className={`flex min-h-screen flex-col ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
-            <Navbar/>
-            <main className="flex-grow">
-                {children}
-            </main>
-            <Footer/>
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
         </Providers>
         </body>
         </html>

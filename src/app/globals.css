@@ -4,112 +4,110 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Dark mode as default:
-   - :root contains the dark palette
-   - .light (optional) can be used if you ever want to support a light theme toggle
+/* Dark mode as default (tuned):
+   Goal: less "dark blue/gray UI", more "tabletop club" — warm charcoal + leather/brown,
+   with your brand red as primary highlight and a muted brass secondary.
 */
 :root {
   --font-geist-sans: Geist, ui-sans-serif, system-ui, sans-serif;
   --font-geist-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
   --radius: 0.625rem;
 
-  /* Core surfaces (dark, slightly cool-neutral; fits both Fantasy + Sci-fi) */
-  --background: #0f0f12;
-  --foreground: #e7e7ea; /* off-white, less harsh than #fff */
+  /* Warm dark base (charcoal with brown warmth) */
+  --background: #120f0c; /* near-black espresso */
+  --foreground: #e8e1d6; /* warm off-white (less harsh than #fff) */
 
-  --card: #17171c;
-  --card-foreground: #e7e7ea;
+  /* Surfaces (leather/wood feel, still neutral enough for sci-fi) */
+  --card: #1a1511;
+  --card-foreground: #e8e1d6;
 
-  --popover: #1f2026;
-  --popover-foreground: #e7e7ea;
+  --popover: #211a15;
+  --popover-foreground: #efe7db;
 
-  /* Brand / highlight red */
+  /* Brand / highlight */
   --primary: #ee1c24;
   --primary-foreground: #ffffff;
 
-  /* Secondary accent: brass/gold (fantasy-friendly, still works for sci-fi) */
-  --secondary: #d6b15c;
-  --secondary-foreground: #0f0f12;
+  /* Secondary accent (brass) */
+  --secondary: #c9a24a;
+  --secondary-foreground: #120f0c;
 
-  /* Muted surfaces & text */
-  --muted: #1a1b21;
-  --muted-foreground: #b9bbc6;
+  /* Muted */
+  --muted: #201a15;
+  --muted-foreground: #bdb2a4;
 
-  /* Accent surfaces (chips/hover states) */
-  --accent: #23242c;
-  --accent-foreground: #e7e7ea;
+  /* Accent surfaces (hover chips, subtle highlights) */
+  --accent: #2a221c;
+  --accent-foreground: #efe7db;
 
-  /* Destructive stays red-ish but separated from primary brand red */
+  /* Destructive (separate from brand red; slightly pinkish so it reads as "danger") */
   --destructive: #ff4d4f;
-  --destructive-foreground: #0f0f12;
+  --destructive-foreground: #120f0c;
 
-  /* Borders, inputs, focus ring */
-  --border: #2a2b33;
-  --input: #2a2b33;
-  --ring: rgba(238, 28, 36, 0.35);
+  /* Borders / inputs: warm separators (not bluish) */
+  --border: rgba(239, 231, 219, 0.12);
+  --input: rgba(239, 231, 219, 0.16);
 
-  /* Charts: keep existing okLCH-based set (works fine on dark);
-     you can revise later if you want brand-aligned charts. */
+  /* Focus ring: warm red glow */
+  --ring: rgba(238, 28, 36, 0.42);
+
+  /* Charts: keep existing (oklch) to avoid breaking appearances */
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
 
-  /* Sidebar aligned to main surfaces */
-  --sidebar: #17171c;
-  --sidebar-foreground: #e7e7ea;
+  /* Sidebar aligned with surfaces */
+  --sidebar: #16120f;
+  --sidebar-foreground: #e8e1d6;
   --sidebar-primary: #ee1c24;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #23242c;
-  --sidebar-accent-foreground: #e7e7ea;
-  --sidebar-border: #2a2b33;
-  --sidebar-ring: rgba(238, 28, 36, 0.35);
+  --sidebar-accent: #2a221c;
+  --sidebar-accent-foreground: #efe7db;
+  --sidebar-border: rgba(239, 231, 219, 0.12);
+  --sidebar-ring: rgba(238, 28, 36, 0.42);
 
   --radix-accordion-content-height: auto;
 }
 
-/* Optional light theme override (only used if you add class="light" somewhere) */
+/* Optional light theme (only if you add class="light" somewhere) */
 .light {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
+  --background: #fbf7f1; /* warm parchment */
+  --foreground: #1a1411;
+
+  --card: #ffffff;
+  --card-foreground: #1a1411;
+
+  --popover: #ffffff;
+  --popover-foreground: #1a1411;
 
   --primary: #ee1c24;
   --primary-foreground: #ffffff;
 
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
+  --secondary: #c9a24a;
+  --secondary-foreground: #1a1411;
 
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
+  --muted: #f0e8dc;
+  --muted-foreground: #5b5046;
 
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --accent: #efe4d3;
+  --accent-foreground: #1a1411;
 
-  --destructive: oklch(0.577 0.245 27.325);
+  --destructive: #d92b2f;
   --destructive-foreground: #ffffff;
 
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
+  --border: rgba(26, 20, 17, 0.12);
+  --input: rgba(26, 20, 17, 0.16);
   --ring: rgba(238, 28, 36, 0.35);
 
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-
-  --sidebar: oklch(0.984 0.003 247.858);
-  --sidebar-foreground: oklch(0.129 0.042 264.695);
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1a1411;
   --sidebar-primary: #ee1c24;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: oklch(0.968 0.007 247.896);
-  --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
-  --sidebar-border: oklch(0.929 0.013 255.508);
+  --sidebar-accent: #efe4d3;
+  --sidebar-accent-foreground: #1a1411;
+  --sidebar-border: rgba(26, 20, 17, 0.12);
   --sidebar-ring: rgba(238, 28, 36, 0.35);
 }
 
@@ -118,6 +116,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -126,14 +125,17 @@
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -147,6 +149,7 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -154,6 +157,7 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -176,8 +180,7 @@
   }
 }
 
-/* Keep .dark variant working for Tailwind selectors,
-   but we no longer need to override variables here because :root is dark by default. */
+/* Keep .dark variant available for Tailwind selectors; variables are already dark by default. */
 .dark {
 }
 
@@ -185,6 +188,7 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }

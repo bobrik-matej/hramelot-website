@@ -11,12 +11,12 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <nav className="bg-white border-b border-gray-200 dark:bg-gray-950 dark:border-gray-800">
+        <nav className="bg-background border-b border-border">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <Link href="/" className="font-bold text-xl text-gray-900 dark:text-white">
+                        <Link href="/" className="font-bold text-xl text-foreground">
                             <Image
                                 src="/images/hramelot_studios.png"
                                 alt="Hramelot Studios Logo"
@@ -30,30 +30,30 @@ const Navbar = () => {
 
                     {/* Desktop Navigation */}
                     <div className="hidden sm:flex sm:items-center sm:space-x-8">
-                        <Link href="/" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                        <Link href="/" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Home
                         </Link>
-                        <Link href="/calendar" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                        <Link href="/calendar" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Calendar
                         </Link>
-                        <Link href="/guide" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                        <Link href="/guide" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Guide
                         </Link>
 
                         {/* Auth Button */}
                         {status === "loading" ? (
-                            <div className="h-9 w-20 animate-pulse bg-gray-200 dark:bg-gray-800 rounded" />
+                            <div className="h-9 w-20 animate-pulse bg-muted rounded" />
                         ) : session ? (
                             <button
                                 onClick={() => signOut()}
-                                className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 transition-colors"
                             >
                                 Sign Out
                             </button>
                         ) : (
                             <button
                                 onClick={() => signIn()}
-                                className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-md hover:bg-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 transition-colors"
                             >
                                 Sign In
                             </button>
@@ -64,7 +64,7 @@ const Navbar = () => {
                     <div className="flex items-center sm:hidden">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="p-2 rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                            className="p-2 rounded-md text-muted-foreground hover:bg-accent"
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
@@ -74,25 +74,25 @@ const Navbar = () => {
 
             {/* Mobile menu */}
             {isOpen && (
-                <div className="sm:hidden border-t border-gray-200 dark:border-gray-800">
+                <div className="sm:hidden border-t border-border">
                     <div className="px-4 py-3 space-y-3">
                         <Link
                             href="/"
-                            className="block text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            className="block text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
                             Home
                         </Link>
                         <Link
                             href="/calendar"
-                            className="block text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            className="block text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
                             Calendar
                         </Link>
                         <Link
                             href="/guide"
-                            className="block text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                            className="block text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                             onClick={() => setIsOpen(false)}
                         >
                             Guide
@@ -100,21 +100,15 @@ const Navbar = () => {
 
                         {session ? (
                             <button
-                                onClick={() => {
-                                    signOut();
-                                    setIsOpen(false);
-                                }}
-                                className="w-full text-left text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                onClick={() => { signOut(); setIsOpen(false); }}
+                                className="w-full text-left text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Sign Out
                             </button>
                         ) : (
                             <button
-                                onClick={() => {
-                                    signIn();
-                                    setIsOpen(false);
-                                }}
-                                className="w-full text-left text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                                onClick={() => { signIn(); setIsOpen(false); }}
+                                className="w-full text-left text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
                             >
                                 Sign In
                             </button>
