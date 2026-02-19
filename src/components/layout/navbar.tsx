@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signIn, signOut } from "next-auth/react";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
@@ -15,14 +16,21 @@ const Navbar = () => {
                 <div className="flex justify-between h-16">
                     {/* Logo */}
                     <div className="flex items-center">
-                        <Link href="/public" className="font-bold text-xl text-gray-900 dark:text-white">
-                            Hramelot
+                        <Link href="/" className="font-bold text-xl text-gray-900 dark:text-white">
+                            <Image
+                                src="/images/hramelot_studios.png"
+                                alt="Hramelot Studios Logo"
+                                width={150}
+                                height={40}
+                                priority
+                                className="h-10 w-auto"
+                            />
                         </Link>
                     </div>
 
                     {/* Desktop Navigation */}
                     <div className="hidden sm:flex sm:items-center sm:space-x-8">
-                        <Link href="/public" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+                        <Link href="/" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
                             Home
                         </Link>
                         <Link href="/calendar" className="text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
@@ -69,7 +77,7 @@ const Navbar = () => {
                 <div className="sm:hidden border-t border-gray-200 dark:border-gray-800">
                     <div className="px-4 py-3 space-y-3">
                         <Link
-                            href="/public"
+                            href="/"
                             className="block text-base font-medium text-gray-700 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
                             onClick={() => setIsOpen(false)}
                         >
