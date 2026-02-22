@@ -1,17 +1,18 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {Card, CardContent} from "@/components/ui/card";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 
 export default function LorePage() {
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto py-8 space-y-8">
+            <div className="text-center space-y-2">
+                <h1 className="text-4xl font-bold">Hramelot Lore</h1>
+                <p className="text-muted-foreground">The history and legends of our realm</p>
+            </div>
+
             <Card>
-                <CardHeader>
-                    <CardTitle>Hramelot Lore</CardTitle>
-                    <CardDescription>The history and legends of our realm</CardDescription>
-                </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="history" className="w-full">
-                        <TabsList className="grid w-full grid-cols-4">
+                        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4">
                             <TabsTrigger value="history">History</TabsTrigger>
                             <TabsTrigger value="factions">Factions</TabsTrigger>
                             <TabsTrigger value="locations">Locations</TabsTrigger>
@@ -42,7 +43,8 @@ export default function LorePage() {
                             <div>
                                 <h3 className="text-lg font-semibold mb-2">The Silver Dice Guild</h3>
                                 <p className="text-muted-foreground">
-                                    Master strategists and veterans who guide new adventurers through their first quests.
+                                    Master strategists and veterans who guide new adventurers through their first
+                                    quests.
                                 </p>
                             </div>
                             <div>

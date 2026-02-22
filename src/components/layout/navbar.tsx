@@ -39,6 +39,9 @@ const Navbar = () => {
                         <Link href="/guide" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                             Guide
                         </Link>
+                        <Link href="/lore" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                            Lore
+                        </Link>
 
                         {/* Auth Button */}
                         {status === "loading" ? (
@@ -96,6 +99,13 @@ const Navbar = () => {
                             onClick={() => setIsOpen(false)}
                         >
                             Guide
+                        </Link>
+                        <Link
+                            href="/lore"
+                            className="block text-base font-medium text-muted-foreground hover:text-foreground transition-colors"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Lore
                         </Link>
 
                         {session ? (

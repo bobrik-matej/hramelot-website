@@ -20,11 +20,14 @@ const Footer = () => {
 
                     {/* Navigation Links */}
                     <nav className="flex gap-6 text-sm font-medium text-muted-foreground">
+                        <Link href="/calendar" className="hover:text-foreground transition-colors">
+                            Calendar
+                        </Link>
                         <Link href="/guide" className="hover:text-foreground transition-colors">
                             Guide
                         </Link>
-                        <Link href="/calendar" className="hover:text-foreground transition-colors">
-                            Calendar
+                        <Link href="/lore" className="hover:text-foreground transition-colors">
+                            Lore
                         </Link>
                         <Link href="/contact" className="hover:text-foreground transition-colors">
                             Contact

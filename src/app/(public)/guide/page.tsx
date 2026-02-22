@@ -1,28 +1,32 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {Card, CardContent} from "@/components/ui/card";
+import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 
 export default function GuidePage() {
     return (
-        <div className="container mx-auto py-8">
+        <div className="container mx-auto py-8 space-y-8">
+            <div className="text-center space-y-2">
+                <h1 className="text-4xl font-bold">Visitor&apos;s Guide</h1>
+                <p className="text-muted-foreground">Everything you need to know about Hramelot</p>
+            </div>
+
             <Card>
-                <CardHeader>
-                    <CardTitle>Visitor's Guide</CardTitle>
-                    <CardDescription>Everything you need to know about Hramelot</CardDescription>
-                </CardHeader>
-                <CardContent>
+                <CardContent className="pt-6">
                     <Accordion type="single" collapsible className="w-full">
                         <AccordionItem value="item-1">
                             <AccordionTrigger>What is Hramelot?</AccordionTrigger>
                             <AccordionContent>
-                                Hramelot is a dedicated D&D community space where adventurers gather to embark on epic quests.
-                                Our facility features multiple gaming areas, a library of rulebooks, and a welcoming community.
+                                Hramelot is a dedicated D&amp;D community space where adventurers gather to embark on
+                                epic quests.
+                                Our facility features multiple gaming areas, a library of rulebooks, and a welcoming
+                                community.
                             </AccordionContent>
                         </AccordionItem>
 
                         <AccordionItem value="item-2">
                             <AccordionTrigger>How do I become a member?</AccordionTrigger>
                             <AccordionContent>
-                                Contact us through our registration form. Membership includes access to private sessions,
+                                Contact us through our registration form. Membership includes access to private
+                                sessions,
                                 table reservations, and exclusive events. New members are always welcome!
                             </AccordionContent>
                         </AccordionItem>
@@ -36,14 +40,14 @@ export default function GuidePage() {
                         </AccordionItem>
 
                         <AccordionItem value="item-4">
-                            <AccordionTrigger>Location & Hours</AccordionTrigger>
+                            <AccordionTrigger>Location &amp; Hours</AccordionTrigger>
                             <AccordionContent>
                                 <p className="mb-2"><strong>Address:</strong> 123 Dragon Lane, Fantasy City</p>
                                 <p className="mb-2"><strong>Hours:</strong></p>
                                 <ul className="list-disc list-inside space-y-1">
-                                    <li>Tuesday-Thursday: 17:00 - 23:00</li>
-                                    <li>Friday-Saturday: 17:00 - 01:00</li>
-                                    <li>Sunday: 14:00 - 22:00</li>
+                                    <li>Tuesday–Thursday: 17:00 – 23:00</li>
+                                    <li>Friday–Saturday: 17:00 – 01:00</li>
+                                    <li>Sunday: 14:00 – 22:00</li>
                                     <li>Monday: Closed</li>
                                 </ul>
                             </AccordionContent>
