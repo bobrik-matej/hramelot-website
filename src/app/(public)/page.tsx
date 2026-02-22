@@ -5,11 +5,11 @@ export default function Home() {
         <div className="flex min-h-screen flex-col items-center justify-center bg-background px-6 py-24">
             <main className="max-w-3xl text-center">
                 <h1 className="text-5xl font-bold tracking-tight text-foreground sm:text-6xl">
-                    Hramelot RPG Club
+                    Hramelot Košice
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                    Join our community of adventurers. Browse upcoming games on our public calendar
-                    or log in as a member to reserve your next table.
+                    Your local home for board games and TTRPGs. Whether you're a pro or a beginner, there’s a seat for you.
+                    Pick a game from our schedule or sign in to reserve your table.
                 </p>
 
                 <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
