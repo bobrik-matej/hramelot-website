@@ -86,22 +86,10 @@ export default function CalendarPage() {
                             mode="single"
                             selected={selectedDate}
                             onSelect={setSelectedDate}
-                            className="p-3 w-full relative"
-                            classNames={{
-                                months: "w-full",
-                                month: "w-full space-y-4",
-                                table: "w-full border-collapse space-y-1",
-                                head_row: "flex w-full justify-between",
-                                head_cell: "text-muted-foreground rounded-md w-full font-normal text-[0.8rem]",
-                                row: "flex w-full justify-between mt-2",
-                                cell: "text-center text-sm p-0 relative focus-within:relative focus-within:z-20 w-full",
-                                day: "h-12 w-full md:h-16 p-0 font-normal aria-selected:opacity-100 hover:bg-accent",
-                                day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-                                day_today: "bg-accent text-accent-foreground",
-                            }}
+                            className="rounded-md border"
                             modifiers={{hasEvent: eventDates}}
                             modifiersClassNames={{
-                                hasEvent: "after:absolute after:bottom-2 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full",
+                                hasEvent: "relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full",
                             }}
                         />
                     </CardContent>
