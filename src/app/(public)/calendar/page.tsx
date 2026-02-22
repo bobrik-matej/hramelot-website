@@ -1,39 +1,119 @@
+"use client";
+
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { format, isSameDay } from "date-fns";
 
 export default function CalendarPage() {
-    // Placeholder: Replace with actual events data
+    const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+
+    // Placeholder: Replace with actual events data from Supabase
     const events = [
-        { id: 1, title: "Weekly Session", date: "2026-02-20", time: "18:00", type: "session" },
-        { id: 2, title: "Tournament Night", date: "2026-02-22", time: "19:00", type: "event" },
-        { id: 3, title: "Campaign Finale", date: "2026-02-27", time: "18:00", type: "session" },
+        { id: 1, title: "D&D - Lost Mines Campaign", date: new Date("2026-02-20"), time: "18:00", type: "session", spotsLeft: 2, totalSpots: 5 },
+        { id: 2, title: "Magic: The Gathering Tournament", date: new Date("2026-02-22"), time: "14:00", type: "event", spotsLeft: 0, totalSpots: 16 },
+        { id: 3, title: "Warhammer 40K", date: new Date("2026-02-22"), time: "18:00", type: "session", spotsLeft: 4, totalSpots: 6 },
+        { id: 4, title: "Beginner's D&D Session", date: new Date("2026-02-22"), time: "19:00", type: "session", spotsLeft: 1, totalSpots: 4 },
+        { id: 5, title: "Pathfinder - Abomination Vaults", date: new Date("2026-02-27"), time: "18:00", type: "session", spotsLeft: 3, totalSpots: 6 },
     ];
 
+    // Get events that have dates matching calendar dates
+    const eventDates = events.map(e => e.date);
+
+    // Filter events for selected date
+    const selectedDateEvents = selectedDate
+        ? events.filter(event => isSameDay(event.date, selectedDate))
+        : [];
+
     return (
-        <div className="container mx-auto py-8">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Event Calendar</CardTitle>
-                    <CardDescription>Upcoming sessions and events at Hramelot</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <div className="space-y-4">
-                        {events.map((event) => (
-                            <div key={event.id} className="flex items-center justify-between p-4 border rounded-lg hover:bg-accent transition-colors">
-                                <div>
-                                    <h3 className="font-semibold">{event.title}</h3>
-                                    <p className="text-sm text-muted-foreground">
-                                        {new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })} at {event.time}
-                                    </p>
-                                </div>
-                                <Badge variant={event.type === "session" ? "default" : "secondary"}>
-                                    {event.type}
-                                </Badge>
+        <div className="container mx-auto py-8 space-y-8">
+            <div className="text-center space-y-2">
+                <h1 className="text-4xl font-bold">Event Calendar</h1>
+                <p className="text-muted-foreground">Upcoming sessions and events at Hramelot</p>
+            </div>
+
+            <div className="grid lg:grid-cols-[1fr_400px] gap-8">
+                {/* Calendar Section - Full Width */}
+                <Card className="w-full">
+                    <CardHeader>
+                        <CardTitle>Select a Date</CardTitle>
+                        <CardDescription>Click on a date to see scheduled sessions</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex justify-center">
+                        <Calendar
+                            mode="single"
+                            selected={selectedDate}
+                            onSelect={setSelectedDate}
+                            className="w-full max-w-full scale-110 md:scale-125"
+                            classNames={{
+                                month: "w-full",
+                                table: "w-full",
+                                day: "h-12 w-12 md:h-14 md:w-14",
+                            }}
+                            modifiers={{
+                                hasEvent: eventDates,
+                            }}
+                            modifiersClassNames={{
+                                hasEvent: "font-bold text-primary relative after:content-[''] after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-primary after:rounded-full",
+                            }}
+                        />
+                    </CardContent>
+                </Card>
+
+                {/* Events List - Sidebar */}
+                <div className="space-y-4">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>
+                                {selectedDate ? format(selectedDate, "MMMM d, yyyy") : "All Events"}
+                            </CardTitle>
+                            <CardDescription>
+                                {selectedDateEvents.length > 0
+                                    ? `${selectedDateEvents.length} event${selectedDateEvents.length > 1 ? 's' : ''} scheduled`
+                                    : "No events scheduled for this date"}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="space-y-3">
+                                {(selectedDateEvents.length > 0 ? selectedDateEvents : events).map((event) => (
+                                    <div
+                                        key={event.id}
+                                        className="p-4 border rounded-lg hover:bg-accent transition-colors space-y-2"
+                                    >
+                                        <div className="flex items-start justify-between gap-2">
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold leading-tight">{event.title}</h3>
+                                                <p className="text-sm text-muted-foreground mt-1">
+                                                    {format(event.date, "EEE, MMM d")} at {event.time}
+                                                </p>
+                                            </div>
+                                            <Badge variant={event.type === "session" ? "default" : "secondary"}>
+                                                {event.type}
+                                            </Badge>
+                                        </div>
+
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-muted-foreground">
+                                                {event.spotsLeft > 0
+                                                    ? `${event.spotsLeft}/${event.totalSpots} spots left`
+                                                    : "Full"}
+                                            </span>
+                                            <Button
+                                                size="sm"
+                                                disabled={event.spotsLeft === 0}
+                                            >
+                                                {event.spotsLeft === 0 ? "Full" : "Register"}
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
+                        </CardContent>
+                    </Card>
+                </div>
+            </div>
         </div>
     );
 }
