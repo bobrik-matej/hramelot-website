@@ -1,38 +1,37 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"; // Assuming you have some UI components
-import { CalendarDays, User, BookOpen } from "lucide-react";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card"; // Assuming you have some UI components
+import {BookOpen, CalendarDays, User} from "lucide-react";
 import ExampleUsage from "@/components/example-usage";
+import {auth} from "@/lib/auth";
 
 export default async function DashboardPage() {
-    // Temporary: Mock session for development
-    const session = {
-        user: {
-            name: "Gandalf the Grey",
-            role: "Dungeon Master",
-            email: "gandalf@hramelot.local",
-        }
-    };
+    const session = await auth();
+
+    if (!session?.user) {
+        return <div>Please sign in</div>;
+    }
 
     const user = session.user;
+
 
     return (
         <div className="container mx-auto py-10 px-4">
             <header className="mb-8">
                 <h1 className="text-4xl font-bold tracking-tight">Welcome back, {user.name || "Adventurer"}!</h1>
                 <p className="text-muted-foreground mt-2">
-                    You are currently logged in as a <span className="font-semibold text-primary">{user.role || "Member"}</span> of Hramelot.
+                    You are currently logged in as a <span
+                    className="font-semibold text-primary">{user.role || "Member"}</span> of Hramelot.
                 </p>
             </header>
 
-            <ExampleUsage />
+            <ExampleUsage/>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {/* Quick Actions / Stats */}
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">My Reservations</CardTitle>
-                        <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                        <CalendarDays className="h-4 w-4 text-muted-foreground"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">Manage Tables</div>
@@ -49,7 +48,7 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Profile Settings</CardTitle>
-                        <User className="h-4 w-4 text-muted-foreground" />
+                        <User className="h-4 w-4 text-muted-foreground"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">Account</div>
@@ -66,7 +65,7 @@ export default async function DashboardPage() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
                         <CardTitle className="text-sm font-medium">Club Lore</CardTitle>
-                        <BookOpen className="h-4 w-4 text-muted-foreground" />
+                        <BookOpen className="h-4 w-4 text-muted-foreground"/>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">The Archives</div>
@@ -85,7 +84,9 @@ export default async function DashboardPage() {
                 <h2 className="text-2xl font-semibold mb-4">Upcoming Club Activities</h2>
                 <div className="rounded-lg border bg-card p-6 text-card-foreground shadow-sm">
                     <p className="text-muted-foreground">
-                        No upcoming events found. Why not <Link href="/calendar" className="text-primary hover:underline">check the calendar</Link> to see what's happening?
+                        No upcoming events found. Why not <Link href="/calendar"
+                                                                className="text-primary hover:underline">check the
+                        calendar</Link> to see what's happening?
                     </p>
                 </div>
             </section>

@@ -35,19 +35,53 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## Key Design Decisions
+## 🏰 Project Overview
 
-### 1. Reservation vs. Game Session
+Hramelot is a digital clubhouse for tabletop gaming. It manages physical space (table reservations) and community content (game sessions, lore, and member resources).
+
+## 🔑 User Roles & Permissions
+
+The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
+
+| Role | Access Level | Key Capabilities |
+| :--- | :--- | :--- |
+| **PUBLIC** | `/` | View events, lore, games, and join info. |
+| **USER** | `/members` | Signed in. Register for public events/sessions. |
+| **MEMBER** | `/members` | **Paid.** Book tables, borrow games, access resources. |
+| **MASTER** | `/members/organize` | **GMs.** Create sessions, manage players, priority booking. |
+| **ADMIN** | `/admin` | Full control over users, content, and system settings. |
+
+## 🗺️ Route Structure
+
+### 🌐 Public (`/`)
+*   `/events`, `/calendar` - Find games to join.
+*   `/lore`, `/guide`, `/gallery` - Discover the club's history and community.
+*   `/join` - Information on becoming a paid member.
+
+### 👤 Member Area (`/members`)
+*Replaces the traditional "Dashboard" to focus on community identity.*
+*   `/profile` - Personal RPG character and contact info.
+*   `/reservations` - (MEMBER+) Table booking system.
+*   `/organize` - (MASTER+) Campaign and session management.
+
+### 👑 Admin (`/admin`)
+*   Member approvals, content management, and club analytics.
+
+## 🛠️ Key Design Decisions
+
+### 1. `/members` vs `/dashboard`
+We chose `/members` as the root for authenticated users because Hramelot is a social club, not a utility. This aligns with our SEO strategy and reinforces the sense of belonging for our players.
+
+### 2. Reservation vs. Game Session
 To maintain flexibility, we distinguish between physical space and game content:
-- **Reservation:** A logistical entity. A Member books a specific **Table** for a time block. This prevents double-booking the physical space.
-- **GameSession:** An optional content layer. If a session is intended to be public (e.g., a DM running a one-shot), a `GameSession` is attached to the `Reservation`. This populates the public calendar with details like Game System, Max Players, and Description.
-- *Note:* Private games only require a `Reservation`.
+- **Reservation:** A logistical entity. A Member books a specific **Table** for a time block.
+- **GameSession:** A content layer. Attached to a Reservation if the game is public, allowing others to see system details and register.
 
-### 2. User Roles & Permissions
-We use a tiered `UserRole` system (`USER`, `MEMBER`, `ADMIN`):
-- **USER:** Public access. Can view the calendar and public game details.
-- **MEMBER:** Can create and manage their own `Reservations` and `GameSessions`.
-- **ADMIN:** Full control over all reservations, tables, and user management.
+### 3. Discord-First Authentication
+Roles are managed via Discord. When a user signs in, the system syncs their Discord Guild roles to their local `UserRole` to determine permissions instantly.
 
-### 3. Table Management
-The system is designed around specific physical entities. The `Table` entity allows for future-proofing (e.g., adding more tables or specific table features) and ensures that every booking is tied to a concrete location in the venue.
+## 💾 Tech Stack
+- **Framework:** Next.js 15 (App Router)
+- **Auth:** Auth.js (NextAuth) with Discord Provider
+- **Database:** PostgreSQL via Prisma ORM
+- **UI:** Tailwind CSS, Radix UI, Lucide React
