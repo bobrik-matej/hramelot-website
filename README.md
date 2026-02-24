@@ -1,41 +1,4 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-## 🏰 Project Overview
+# 🏰 Hramelot - Tabletop Gaming Club Portal
 
 Hramelot is a digital clubhouse for tabletop gaming. It manages physical space (table reservations) and community content (game sessions, lore, and member resources).
 
@@ -54,18 +17,193 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ## 🗺️ Route Structure
 
 ### 🌐 Public (`/`)
-*   `/events`, `/calendar` - Find games to join.
-*   `/lore`, `/guide`, `/gallery` - Discover the club's history and community.
-*   `/join` - Information on becoming a paid member.
+*SEO-optimized, publicly accessible*
+
+```
+/                                 # Homepage
+/about                           # About Hramelot club
+/location                        # Where we are, contact info
+/calendar                        # Public event calendar (read-only)
+/events                          # Upcoming public events
+  /events/[id]                   # Event details (can register if USER+)
+/games                           # Games we play/own (showcase)
+/lore                            # Club history & stories
+/guide                           # Beginner's guide
+/join                            # How to become a MEMBER (membership info)
+/faq                             # Frequently asked questions
+/gallery                         # Photos from events
+```
 
 ### 👤 Member Area (`/members`)
 *Replaces the traditional "Dashboard" to focus on community identity.*
-*   `/profile` - Personal RPG character and contact info.
-*   `/reservations` - (MEMBER+) Table booking system.
-*   `/organize` - (MASTER+) Campaign and session management.
+
+**USER Pages** (Signed in via Discord)
+```
+/members                         # USER+ landing page
+/members/profile                 # Personal profile
+/members/events                  # Browse & register for events
+  /members/events/[id]/register  # Register for public event
+/members/sessions                # Browse open game sessions
+  /members/sessions/[id]/join    # Request to join a session
+/members/feed                    # Community activity feed (read-only)
+/members/library                 # Browse game library
+```
+
+**MEMBER Pages** (Paid membership)
+*Inherits USER pages, plus:*
+```
+/members/reservations            # Book tables ⭐ PRIMARY
+  /members/reservations/new      # Create table booking
+  /members/reservations/calendar # Full calendar (book any open slot)
+  /members/reservations/mine     # My bookings
+  /members/reservations/[id]     # View/edit own booking
+
+/members/directory               # Full member directory
+  /members/directory/[username]  # Member profile page
+
+/members/library/borrow          # Request to borrow games
+/members/resources               # Member-only resources
+  /members/resources/sheets      # Character sheets
+  /members/resources/rules       # House rules
+  /members/resources/guides      # Advanced guides
+
+/members/inventory               # Club equipment available
+  /members/inventory/reserve     # Reserve dice/miniatures
+
+/members/polls                   # Vote on club decisions
+  /members/polls/[id]            # Active poll
+
+/members/perks                   # Member benefits & discounts
+```
+
+**MASTER Pages** (Game Masters / Organizers)
+*Runs 2+ sessions/month - elevated privileges. Inherits MEMBER pages, plus:*
+```
+/members/organize                # Master control center
+/members/organize/sessions       # My organized sessions
+  /members/organize/sessions/new # Create new session/campaign
+  /members/organize/sessions/[id] # Manage session
+    - View registered players (full details)
+    - Email/message players
+    - Session notes/prep area
+    - Attendance tracking
+
+/members/reservations/priority   # Priority booking (see available slots first)
+
+/members/organize/campaigns      # Manage ongoing campaigns
+  /members/organize/campaigns/new
+  /members/organize/campaigns/[id]
+    - Campaign dashboard
+    - Player roster with contact info
+    - Session history
+    - Campaign notes (private)
+
+/members/organize/players        # View player details for YOUR sessions
+  - Contact information
+  - RSVP history
+  - Preferences/notes
+  - Dietary restrictions (for snacks)
+
+/members/organize/stats          # Your hosting statistics
+  - Sessions run
+  - Player satisfaction
+  - Attendance rates
+```
 
 ### 👑 Admin (`/admin`)
-*   Member approvals, content management, and club analytics.
+*Full club control. Inherits all previous pages, plus:*
+
+```
+/admin                           # Admin control panel
+/admin/members                   # Member management
+  /admin/members/[id]            # Edit user details
+  /admin/members/roles           # Assign/change roles
+  /admin/members/approvals       # Approve new MEMBER applications
+
+/admin/content                   # Content management
+  /admin/content/pages           # Edit public pages (About, Guide, etc.)
+  /admin/content/lore            # Manage lore entries
+  /admin/content/announcements   # Create club announcements
+
+/admin/tables                    # Manage tables
+  /admin/tables/new              # Add new table
+  /admin/tables/[id]/edit        # Edit/remove table
+
+/admin/reservations              # Override all reservations
+  /admin/reservations/manage     # View/edit/cancel any booking
+  /admin/reservations/conflicts  # Resolve booking conflicts
+
+/admin/events                    # Manage all events
+  /admin/events/[id]             # Edit any event (override)
+
+/admin/library                   # Manage game library
+  /admin/library/add             # Add new games
+  /admin/library/inventory       # Track condition/location
+
+/admin/inventory                 # Manage club equipment
+  /admin/inventory/add           # Add equipment
+  /admin/inventory/maintenance   # Track maintenance
+
+/admin/polls                     # Create & manage polls
+  /admin/polls/new               # Create new poll
+  /admin/polls/results           # View results
+
+/admin/settings                  # Club settings
+  /admin/settings/general        # General config
+  /admin/settings/discord        # Discord integration
+  /admin/settings/payments       # Membership payment config
+  /admin/settings/notifications  # Email/notification templates
+
+/admin/analytics                 # Club analytics
+  - Member growth
+  - Table utilization
+  - Popular games
+  - Revenue tracking (memberships)
+  - Attendance trends
+
+/admin/moderation                # Community moderation
+  /admin/moderation/reports      # Handle reports
+  /admin/moderation/feed         # Moderate community posts
+```
+
+## 🎨 Visual Role Hierarchy
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ PUBLIC (/)                                                   │
+│ ├─ Home, About, Location, Calendar, Events, Games, Lore    │
+│ └─ Join, FAQ, Gallery, Guide                               │
+└─────────────────────────────────────────────────────────────┘
+                           ↓ Sign in with Discord
+┌─────────────────────────────────────────────────────────────┐
+│ USER (/members)                                              │
+│ ├─ Profile, Events (register), Sessions (join)             │
+│ └─ Feed (read), Library (browse)                           │
+└─────────────────────────────────────────────────────────────┘
+                           ↓ Pay membership
+┌─────────────────────────────────────────────────────────────┐
+│ MEMBER (/members)                                            │
+│ ├─ + Reservations (book tables) ⭐                          │
+│ ├─ + Directory, Resources, Inventory                       │
+│ └─ + Polls, Perks, Borrow games                            │
+└─────────────────────────────────────────────────────────────┘
+                           ↓ Run 2+ sessions/month
+┌─────────────────────────────────────────────────────────────┐
+│ MASTER (/members/organize)                                   │
+│ ├─ + Priority booking                                       │
+│ ├─ + Create sessions/campaigns                             │
+│ ├─ + View player details (own sessions)                    │
+│ └─ + Campaign management, GM tools                         │
+└─────────────────────────────────────────────────────────────┘
+                           ↓ Assigned by admin
+┌─────────────────────────────────────────────────────────────┐
+│ ADMIN (/admin)                                               │
+│ ├─ + Member/role management                                 │
+│ ├─ + Content & settings management                          │
+│ ├─ + Override any action                                    │
+│ └─ + Analytics & moderation                                 │
+└─────────────────────────────────────────────────────────────┘
+```
 
 ## 🛠️ Key Design Decisions
 
@@ -85,3 +223,34 @@ Roles are managed via Discord. When a user signs in, the system syncs their Disc
 - **Auth:** Auth.js (NextAuth) with Discord Provider
 - **Database:** PostgreSQL via Prisma ORM
 - **UI:** Tailwind CSS, Radix UI, Lucide React
+
+## 🚀 Getting Started
+
+First, run the development server:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+## 📚 Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## 🚢 Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

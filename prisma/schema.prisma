@@ -16,9 +16,11 @@ datasource db {
 // --- Enums ---
 
 enum UserRole {
-  USER // Public user: can browse and register for games
-  MEMBER // Club Member: can reserve tables
-  ADMIN // Admin: can manage tables and users
+  PUBLIC // Not signed in (handled by absence of session) - can view public content
+  USER   // Signed in via Discord - can register for public events/sessions
+  MEMBER // Paid membership - can book tables, borrow games, access resources
+  MASTER // Runs 2+ sessions/month - can create sessions, manage players, priority booking
+  ADMIN  // Full control over users, content, and system settings
 }
 
 enum RegistrationStatus {
@@ -38,12 +40,23 @@ model User {
   emailVerified DateTime?
   image         String?
   role          UserRole  @default(USER)
+
+  // MEMBER-specific fields
+  membershipStart  DateTime?
+  membershipEnd    DateTime?
+  membershipActive Boolean   @default(false)
+
+  // MASTER-specific fields
+  sessionsHosted Int       @default(0)
+  masterSince    DateTime?
+
   accounts      Account[]
   sessions      Session[]
 
   // Application Relations
-  reservations  Reservation[]      @relation("ReservedBy")
-  registrations GameRegistration[]
+  reservations      Reservation[]      @relation("ReservedBy")
+  organizedSessions GameSession[]      @relation("Organizer")
+  registrations     GameRegistration[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -105,7 +118,7 @@ model Table {
   reservations Reservation[]
 }
 
-/// A booking of a physical table by a user (typically a Member or DM).
+/// A booking of a physical table by a user (typically a Member or Master).
 model Reservation {
   id        String   @id @default(cuid())
   title     String // Internal name e.g. "Bob's Campaign"
@@ -141,6 +154,10 @@ model GameSession {
   // Link to the physical reservation
   reservationId String      @unique
   reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  // Link to the Master/organizer
+  organizerId String
+  organizer   User   @relation("Organizer", fields: [organizerId], references: [id])
 
   registrations GameRegistration[]
 }
