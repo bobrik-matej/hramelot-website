@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
             },
             skip,
             take: limit,
-            orderBy: [{ reservation: { startTime: "asc" } }, { id: "asc" }],
+            orderBy: { id: "asc" },
         }),
         db.gameSession.count({ where }),
     ]);

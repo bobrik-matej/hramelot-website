@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
-import { requireRole, requireAuth, successResponse, errorResponse, parsePagination, parseSorting } from "@/lib/api-helpers";
+import { requireRole, requireAuth, successResponse, errorResponse, parsePagination } from "@/lib/api-helpers";
 import { z } from "zod";
 
 const createReservationSchema = z.object({
