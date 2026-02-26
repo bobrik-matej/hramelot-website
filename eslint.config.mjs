@@ -4,12 +4,7 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 const config = [
   ...nextVitals,
   {
-    ignores: [
-      '.next/**',
-      'out/**',
-      'build/**',
-      'next-env.d.ts',
-    ],
+    ignores: ['.next/**', 'out/**', 'build/**', 'next-env.d.ts'],
   },
   {
     rules: {
@@ -17,7 +12,7 @@ const config = [
       'object-curly-spacing': ['error', 'always'],
     },
   },
-eslintConfigPrettier,
+  eslintConfigPrettier,
 ];
 
 export default config;

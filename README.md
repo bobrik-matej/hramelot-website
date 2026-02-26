@@ -8,7 +8,7 @@ content (game sessions, lore, and member resources).
 The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 | Role       | Access Level        | Key Capabilities                                            |
-|:-----------|:--------------------|:------------------------------------------------------------|
+| :--------- | :------------------ | :---------------------------------------------------------- |
 | **PUBLIC** | `/`                 | View events, lore, games, and join info.                    |
 | **USER**   | `/members`          | Signed in. Register for public events/sessions.             |
 | **MEMBER** | `/members`          | **Paid.** Book tables, borrow games, access resources.      |
@@ -19,7 +19,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 ### 🌐 Public (`/`)
 
-*SEO-optimized, publicly accessible*
+_SEO-optimized, publicly accessible_
 
 ```
 /                                 # Homepage
@@ -38,7 +38,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 ### 👤 Member Area (`/members`)
 
-*Replaces the traditional "Dashboard" to focus on community identity.*
+_Replaces the traditional "Dashboard" to focus on community identity._
 
 **USER Pages** (Signed in via Discord)
 
@@ -54,7 +54,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ```
 
 **MEMBER Pages** (Paid membership)
-*Inherits USER pages, plus:*
+_Inherits USER pages, plus:_
 
 ```
 /members/reservations            # Book tables ⭐ PRIMARY
@@ -82,7 +82,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ```
 
 **MASTER Pages** (Game Masters / Organizers)
-*Runs 2+ sessions/month - elevated privileges. Inherits MEMBER pages, plus:*
+_Runs 2+ sessions/month - elevated privileges. Inherits MEMBER pages, plus:_
 
 ```
 /members/organize                # Master control center
@@ -118,7 +118,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 ### 👑 Admin (`/admin`)
 
-*Full club control. Inherits all previous pages, plus:*
+_Full club control. Inherits all previous pages, plus:_
 
 ```
 /admin                           # Admin control panel
@@ -301,9 +301,9 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 ### 🗄️ Database Scripts
 
 | Command            | Description                                                 |
-|:-------------------|:------------------------------------------------------------|
+| :----------------- | :---------------------------------------------------------- |
 | `npm run db:seed`  | Populate the DB with test data                              |
 | `npm run db:push`  | Apply `schema.prisma` changes to the DB                     |
 | `npm run db:wipe`  | Delete all data (keeps schema)                              |
-| `npm run db:reset` | Wipe → push schema → seed *(most common during WIP)*        |
+| `npm run db:reset` | Wipe → push schema → seed _(most common during WIP)_        |
 | `npm run db:fresh` | Nuclear reset via `prisma migrate reset --force`, then seed |

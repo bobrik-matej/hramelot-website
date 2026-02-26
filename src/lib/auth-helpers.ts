@@ -1,4 +1,4 @@
-import { Session } from "next-auth";
+import { Session } from 'next-auth';
 
 /**
  * User role hierarchy for Hramelot
@@ -11,16 +11,16 @@ export type UserRole = 'PUBLIC' | 'USER' | 'MEMBER' | 'MASTER' | 'ADMIN';
  * @returns UserRole - One of: PUBLIC, USER, MEMBER, MASTER, ADMIN
  */
 export const getUserRole = (session: Session | null): UserRole => {
-    if (!session?.user) return 'PUBLIC';
+  if (!session?.user) return 'PUBLIC';
 
-    const role = session.user.role?.toUpperCase();
+  const role = session.user.role?.toUpperCase();
 
-    if (role === 'ADMIN') return 'ADMIN';
-    if (role === 'MASTER') return 'MASTER';
-    if (role === 'MEMBER') return 'MEMBER';
-    if (session.user) return 'USER';
+  if (role === 'ADMIN') return 'ADMIN';
+  if (role === 'MASTER') return 'MASTER';
+  if (role === 'MEMBER') return 'MEMBER';
+  if (session.user) return 'USER';
 
-    return 'PUBLIC';
+  return 'PUBLIC';
 };
 
 /**
@@ -30,16 +30,16 @@ export const getUserRole = (session: Session | null): UserRole => {
  * @returns boolean
  */
 export const hasMinimumRole = (session: Session | null, requiredRole: UserRole): boolean => {
-    const roleHierarchy: Record<UserRole, number> = {
-        'PUBLIC': 0,
-        'USER': 1,
-        'MEMBER': 2,
-        'MASTER': 3,
-        'ADMIN': 4,
-    };
+  const roleHierarchy: Record<UserRole, number> = {
+    PUBLIC: 0,
+    USER: 1,
+    MEMBER: 2,
+    MASTER: 3,
+    ADMIN: 4,
+  };
 
-    const userRole = getUserRole(session);
-    return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
+  const userRole = getUserRole(session);
+  return roleHierarchy[userRole] >= roleHierarchy[requiredRole];
 };
 
 /**
@@ -49,7 +49,7 @@ export const hasMinimumRole = (session: Session | null, requiredRole: UserRole):
  * @returns boolean
  */
 export const hasRole = (session: Session | null, role: UserRole): boolean => {
-    return getUserRole(session) === role;
+  return getUserRole(session) === role;
 };
 
 /**
@@ -58,7 +58,7 @@ export const hasRole = (session: Session | null, role: UserRole): boolean => {
  * @returns boolean
  */
 export const isAdmin = (session: Session | null): boolean => {
-    return getUserRole(session) === 'ADMIN';
+  return getUserRole(session) === 'ADMIN';
 };
 
 /**
@@ -67,8 +67,8 @@ export const isAdmin = (session: Session | null): boolean => {
  * @returns boolean
  */
 export const canOrganize = (session: Session | null): boolean => {
-    const role = getUserRole(session);
-    return role === 'MASTER' || role === 'ADMIN';
+  const role = getUserRole(session);
+  return role === 'MASTER' || role === 'ADMIN';
 };
 
 /**
@@ -77,8 +77,8 @@ export const canOrganize = (session: Session | null): boolean => {
  * @returns boolean
  */
 export const canMakeReservations = (session: Session | null): boolean => {
-    const role = getUserRole(session);
-    return ['MEMBER', 'MASTER', 'ADMIN'].includes(role);
+  const role = getUserRole(session);
+  return ['MEMBER', 'MASTER', 'ADMIN'].includes(role);
 };
 
 /**
@@ -87,5 +87,5 @@ export const canMakeReservations = (session: Session | null): boolean => {
  * @returns boolean
  */
 export const isAuthenticated = (session: Session | null): boolean => {
-    return getUserRole(session) !== 'PUBLIC';
+  return getUserRole(session) !== 'PUBLIC';
 };
