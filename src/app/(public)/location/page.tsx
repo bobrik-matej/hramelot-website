@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { MapPin, Clock, Mail, Phone } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Find Us | Hramelot Košice',
+  description:
+    'Visit Hramelot, the tabletop gaming club in Košice, Slovakia. Find our address, opening hours, and directions.',
+};
 
 export default function LocationPage() {
   return (

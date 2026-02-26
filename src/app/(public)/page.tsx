@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Hramelot Košice | Tabletop Gaming Club',
+  description:
+    "Your local home for board games and TTRPGs in Košice. Whether you're a pro or a beginner, there's a seat for you. Pick a game from our schedule or sign in to reserve your table.",
+};
 
 export default function Home() {
   return (

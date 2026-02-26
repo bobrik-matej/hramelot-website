@@ -1,5 +1,12 @@
+import type { Metadata } from 'next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+export const metadata: Metadata = {
+  title: 'Lore | Hramelot Košice',
+  description:
+    'Explore the legends and history of Hramelot – the factions, locations, and tales that define our tabletop gaming community.',
+};
 
 export default function LorePage() {
   return (

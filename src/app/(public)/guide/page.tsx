@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Accordion,
@@ -5,6 +6,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+
+export const metadata: Metadata = {
+  title: "Visitor's Guide | Hramelot Košice",
+  description:
+    'Everything you need to know before visiting Hramelot – what to bring, house rules, membership, hours, and how to get here.',
+};
 
 export default function GuidePage() {
   return (

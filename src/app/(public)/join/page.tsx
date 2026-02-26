@@ -1,8 +1,19 @@
+import type { Metadata } from 'next';
+import { auth } from '@/lib/auth';
 import { PricingCard } from '@/components/join/PricingCard';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { applyForMembershipAction } from './actions';
 
-export default function JoinPage() {
+export const metadata: Metadata = {
+  title: 'Join Hramelot | Become a Member',
+  description:
+    'Become a member of Hramelot, the premier tabletop gaming club in Košice. Book tables, join D&D campaigns, borrow games, and connect with local players.',
+};
+
+export default async function JoinPage() {
+  const session = await auth();
+
   return (
     <div className="container mx-auto space-y-8 py-8">
       <div className="space-y-2 text-center">
@@ -37,7 +48,17 @@ export default function JoinPage() {
             { text: 'Discounts on events' },
           ]}
         >
-          <Button className="w-full">Become a Member</Button>
+          {session?.user ? (
+            <form action={applyForMembershipAction}>
+              <Button type="submit" className="w-full">
+                Become a Member
+              </Button>
+            </form>
+          ) : (
+            <Button className="w-full" asChild>
+              <Link href="/api/auth/signin?callbackUrl=/join">Sign In to Apply</Link>
+            </Button>
+          )}
         </PricingCard>
 
         <PricingCard
@@ -56,3 +77,4 @@ export default function JoinPage() {
     </div>
   );
 }
+

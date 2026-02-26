@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import type { ClubEvent } from '@/types/events';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,6 +6,20 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Users, MapPin } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const event = await db.event.findUnique({ where: { id, published: true } });
+  if (!event) return {};
+  return {
+    title: `${event.title} | Hramelot Events`,
+    description: event.description ?? `Join us for ${event.title} at Hramelot Košice.`,
+  };
+}
 
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

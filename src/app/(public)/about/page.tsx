@@ -1,4 +1,11 @@
+import type { Metadata } from 'next';
 import { Card, CardContent } from '@/components/ui/card';
+
+export const metadata: Metadata = {
+  title: 'About Hramelot | Tabletop Gaming Club in Košice',
+  description:
+    'Learn about Hramelot, the premier tabletop gaming community in Košice. Discover our mission, what we offer, and our community values.',
+};
 
 export default function AboutPage() {
   return (

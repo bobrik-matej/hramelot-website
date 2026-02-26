@@ -1,7 +1,14 @@
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import type { Game } from '@/types/games';
 import { GameCard } from '@/components/games/GameCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
+export const metadata: Metadata = {
+  title: 'Game Library | Hramelot Košice',
+  description:
+    'Explore the Hramelot game library. We have board games, RPG rulebooks, and more for members to borrow and play.',
+};
 
 export default async function GamesPage() {
   const games: Game[] = await db.game.findMany({ orderBy: { title: 'asc' } });

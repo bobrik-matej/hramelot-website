@@ -1,7 +1,14 @@
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import CalendarView, { type CalendarItem } from '@/components/calendar/CalendarView';
 import type { ClubEvent } from '@/types/events';
 import type { GameSession } from '@/types/sessions';
+
+export const metadata: Metadata = {
+  title: 'Event Calendar | Hramelot Košice',
+  description:
+    'View upcoming game sessions and events at Hramelot in Košice. Find your next board game night or RPG campaign.',
+};
 
 type EventWithCount = ClubEvent & { _count: { registrations: number } };
 type SessionWithReservation = GameSession & {
