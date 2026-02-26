@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import type { Table } from '@/types/reservations';
-import { createReservationAction } from './actions';
+import { createReservationAction } from '@/app/(members)/members/reservations/new/actions';
 
 interface NewReservationFormProps {
   tables: Table[];
@@ -32,9 +32,7 @@ export default function NewReservationForm({ tables }: NewReservationFormProps) 
         </CardHeader>
         <CardContent>
           <form action={formAction} className="space-y-6">
-            {state?.error && (
-              <p className="text-destructive text-sm">{state.error}</p>
-            )}
+            {state?.error && <p className="text-destructive text-sm">{state.error}</p>}
 
             <div className="space-y-2">
               <Label htmlFor="title">Session Title</Label>
