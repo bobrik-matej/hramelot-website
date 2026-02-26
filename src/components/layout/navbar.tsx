@@ -2,10 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { Menu, X, User, Settings, LogOut } from "lucide-react";
-import { useState } from "react";
-import { getUserRole } from "@/lib/auth-helpers";
+import {signIn, signOut, useSession} from "next-auth/react";
+import {LogOut, Menu, Settings, User, X} from "lucide-react";
+import {useState} from "react";
+import {getUserRole} from "@/lib/auth-helpers";
 import {
     NavigationMenu,
     NavigationMenuContent,
@@ -23,9 +23,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {Button} from "@/components/ui/button";
+import {cn} from "@/lib/utils";
 
 const Navbar = () => {
     const { data: session, status } = useSession();
@@ -34,36 +34,32 @@ const Navbar = () => {
 
     // Simplified top-level navigation
     const getTopLevelNav = () => {
-        const items = [
-            { href: "/calendar", label: "Calendar" },
-            { href: "/guide", label: "Guide" },
-            { href: "/lore", label: "Lore" },
-            { href: "/about", label: "About" },
+        return [
+            {href: "/calendar", label: "Calendar"},
+            {href: "/guide", label: "Guide"},
+            {href: "/lore", label: "Lore"},
+            {href: "/about", label: "About"},
         ];
-
-        return items;
     };
 
     // Grouped member navigation for dropdown
     const getMemberDropdownItems = () => {
         if (userRole === 'PUBLIC') return null;
 
-        const items = {
+        return {
             general: [
-                { href: "/members", label: "Portal", description: "Member home" },
-                { href: "/members/events", label: "Events", description: "Browse & register" },
-                { href: "/members/sessions", label: "Sessions", description: "Join game sessions" },
-                { href: "/members/library", label: "Library", description: "Browse games" },
+                {href: "/members", label: "Portal", description: "Member home"},
+                {href: "/members/events", label: "Events", description: "Browse & register"},
+                {href: "/members/sessions", label: "Sessions", description: "Join game sessions"},
+                {href: "/members/library", label: "Library", description: "Browse games"},
             ],
             member: userRole !== 'USER' ? [
-                { href: "/members/reservations", label: "Book Tables", description: "Reserve space" },
+                {href: "/members/reservations", label: "Book Tables", description: "Reserve space"},
             ] : [],
             master: ['MASTER', 'ADMIN'].includes(userRole) ? [
-                { href: "/members/organize", label: "Organize", description: "Create & manage sessions" },
+                {href: "/members/organize", label: "Organize", description: "Create & manage sessions"},
             ] : [],
         };
-
-        return items;
     };
 
     const topLevelNav = getTopLevelNav();
@@ -107,7 +103,7 @@ const Navbar = () => {
                                     <NavigationMenuItem>
                                         <NavigationMenuTrigger>Members</NavigationMenuTrigger>
                                         <NavigationMenuContent>
-                                            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2">
+                                            <ul className="grid w-100 gap-3 p-4 md:w-125 md:grid-cols-2">
                                                 {memberDropdown.general.map((item) => (
                                                     <ListItem
                                                         key={item.href}
