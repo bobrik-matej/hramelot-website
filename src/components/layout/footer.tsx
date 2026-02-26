@@ -3,84 +3,62 @@
 import React from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-
-// Helper to determine user role from session
-const getUserRole = (session: any): 'PUBLIC' | 'USER' | 'MEMBER' | 'MASTER' | 'ADMIN' => {
-    if (!session?.user) return 'PUBLIC';
-
-    const role = session.user.role?.toUpperCase();
-
-    if (role === 'ADMIN') return 'ADMIN';
-    if (role === 'MASTER') return 'MASTER';
-    if (role === 'MEMBER') return 'MEMBER';
-    if (session.user) return 'USER';
-
-    return 'PUBLIC';
-};
+import { getUserRole } from "@/lib/auth-helpers";
 
 const Footer = () => {
     const { data: session } = useSession();
     const currentYear = new Date().getFullYear();
     const userRole = getUserRole(session);
 
-    // Define footer sections based on role
+    // Simplified footer - max 4 columns
     const getFooterSections = () => {
         const sections: { title: string; links: { href: string; label: string }[] }[] = [];
 
-        // Public section - always visible
+        // Column 1: Discover (always visible)
         sections.push({
-            title: "Explore",
+            title: "Discover",
             links: [
                 { href: "/calendar", label: "Calendar" },
                 { href: "/events", label: "Events" },
                 { href: "/games", label: "Games" },
                 { href: "/lore", label: "Lore" },
+                { href: "/guide", label: "Guide" },
             ],
         });
 
+        // Column 2: About (always visible)
         sections.push({
             title: "About",
             links: [
                 { href: "/about", label: "About Us" },
                 { href: "/location", label: "Location" },
-                { href: "/guide", label: "Guide" },
                 { href: "/join", label: "Join Us" },
             ],
         });
 
-        // Member section - for authenticated users
+        // Column 3: Members (conditional)
         if (userRole !== 'PUBLIC') {
+            const memberLinks = [
+                { href: "/members", label: "Portal" },
+                { href: "/members/events", label: "Events" },
+                { href: "/members/library", label: "Library" },
+            ];
+
+            if (['MEMBER', 'MASTER', 'ADMIN'].includes(userRole)) {
+                memberLinks.push({ href: "/members/reservations", label: "Book Tables" });
+            }
+
+            if (['MASTER', 'ADMIN'].includes(userRole)) {
+                memberLinks.push({ href: "/members/organize", label: "Organize" });
+            }
+
             sections.push({
                 title: "Members",
-                links: [
-                    { href: "/members", label: "Portal" },
-                    { href: "/members/profile", label: "Profile" },
-                    { href: "/members/events", label: "Events" },
-                    { href: "/members/library", label: "Library" },
-                ],
+                links: memberLinks,
             });
         }
 
-        // Add additional links for MEMBER+ roles
-        if (['MEMBER', 'MASTER', 'ADMIN'].includes(userRole)) {
-            sections.push({
-                title: "Services",
-                links: [
-                    { href: "/members/reservations", label: "Book Tables" },
-                    { href: "/members/sessions", label: "Sessions" },
-                ],
-            });
-        }
-
-        // Add organize section for MASTER+ roles
-        if (['MASTER', 'ADMIN'].includes(userRole)) {
-            const servicesSection = sections.find(s => s.title === "Services");
-            if (servicesSection) {
-                servicesSection.links.push({ href: "/members/organize", label: "Organize" });
-            }
-        }
-
-        // Add admin section for ADMIN role
+        // Column 4: Admin (conditional)
         if (userRole === 'ADMIN') {
             sections.push({
                 title: "Admin",
@@ -99,7 +77,7 @@ const Footer = () => {
     return (
         <footer className="w-full border-t border-border bg-background py-12">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-2 gap-8 md:grid-cols-4 lg:grid-cols-5">
+                <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
                     {/* Brand Section */}
                     <div className="col-span-2 md:col-span-1">
                         <Link href="/" className="text-xl font-bold text-foreground">

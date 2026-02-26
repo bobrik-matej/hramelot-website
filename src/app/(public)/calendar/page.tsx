@@ -86,7 +86,7 @@ export default function CalendarPage() {
                             mode="single"
                             selected={selectedDate}
                             onSelect={setSelectedDate}
-                            className="rounded-md border"
+                            className="rounded-md border w-full"
                             modifiers={{hasEvent: eventDates}}
                             modifiersClassNames={{
                                 hasEvent: "relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full",

@@ -29,7 +29,7 @@ function Calendar({
         <DayPicker
             showOutsideDays={showOutsideDays}
             className={cn(
-                "bg-background group/calendar p-3 [--cell-size:2rem] in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent",
+                "bg-background group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
                 String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
                 String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
                 className
@@ -41,24 +41,24 @@ function Calendar({
                 ...formatters,
             }}
             classNames={{
-                root: cn("w-full", defaultClassNames.root),
+                root: cn("w-fit", defaultClassNames.root),
                 months: cn(
-                    "relative flex flex-col gap-4 md:flex-row w-full",
+                    "relative flex flex-col gap-4 md:flex-row",
                     defaultClassNames.months
                 ),
                 month: cn("flex w-full flex-col gap-4", defaultClassNames.month),
                 nav: cn(
-                    "absolute inset-x-0 top-0 flex items-center justify-between pointer-events-none",
+                    "absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1",
                     defaultClassNames.nav
                 ),
                 button_previous: cn(
                     buttonVariants({variant: buttonVariant}),
-                    "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 pointer-events-auto z-10", // Add z-10 and pointer-events
+                    "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50",
                     defaultClassNames.button_previous
                 ),
                 button_next: cn(
                     buttonVariants({variant: buttonVariant}),
-                    "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 pointer-events-auto z-10", // Add z-10 and pointer-events
+                    "h-[--cell-size] w-[--cell-size] select-none p-0 aria-disabled:opacity-50",
                     defaultClassNames.button_next
                 ),
                 month_caption: cn(
