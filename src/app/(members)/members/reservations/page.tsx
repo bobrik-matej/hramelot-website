@@ -1,74 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
-type Reservation = {
-    id: string;
-    title: string;
-    startTime: string;
-    endTime: string;
-    table: {
-        name: string;
-        capacity: number;
-    };
-    user: {
-        name: string;
-        email: string;
-    };
-};
+import { useReservations } from "@/hooks/useReservations";
 
 export default function ReservationsPage() {
-    const [reservations, setReservations] = useState<Reservation[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+    const { reservations, loading, error, createReservation } = useReservations();
 
-    // Fetch reservations
-    useEffect(() => {
-        async function fetchReservations() {
-            try {
-                const response = await fetch("/api/reservations");
-                if (!response.ok) throw new Error("Failed to fetch");
-                const data = await response.json();
-                setReservations(data);
-            } catch (err) {
-                setError("Could not load reservations");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        fetchReservations();
-    }, []);
-
-    // Simple form submission
     async function handleCreateReservation() {
-        // For POC: hardcoded values - replace with real form inputs
-        const newReservation = {
+        const result = await createReservation({
             title: "Test Reservation",
             startTime: new Date("2026-03-01T18:00:00").toISOString(),
             endTime: new Date("2026-03-01T21:00:00").toISOString(),
-            tableId: "replace-with-real-table-id", // You need to create a table first
-            userId: "replace-with-real-user-id", // You need a real user ID
-        };
+            tableId: "replace-with-real-table-id",
+            userId: "replace-with-real-user-id",
+        });
 
-        try {
-            const response = await fetch("/api/reservations", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(newReservation),
-            });
-
-            if (!response.ok) throw new Error("Failed to create");
-
-            const created = await response.json();
-            setReservations([created, ...reservations]);
+        if (result.success) {
             alert("Reservation created!");
-        } catch (err) {
+        } else {
             alert("Failed to create reservation");
-            console.error(err);
         }
     }
 
@@ -92,10 +43,7 @@ export default function ReservationsPage() {
                             <p className="text-muted-foreground">No reservations yet</p>
                         ) : (
                             reservations.map((reservation) => (
-                                <div
-                                    key={reservation.id}
-                                    className="border p-4 rounded-lg"
-                                >
+                                <div key={reservation.id} className="border p-4 rounded-lg">
                                     <h3 className="font-bold">{reservation.title}</h3>
                                     <p className="text-sm text-muted-foreground">
                                         Table: {reservation.table.name} (Capacity: {reservation.table.capacity})

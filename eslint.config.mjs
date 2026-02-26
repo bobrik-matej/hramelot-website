@@ -1,16 +1,23 @@
-import { defineConfig, globalIgnores } from 'eslint/config'
-import nextVitals from 'eslint-config-next/core-web-vitals'
+import nextVitals from 'eslint-config-next/core-web-vitals';
+import eslintConfigPrettier from 'eslint-config-prettier';
 
-const eslintConfig = defineConfig([
+const config = [
   ...nextVitals,
-  // Override default ignores of eslint-config-next.
-  globalIgnores([
-    // Default ignores of eslint-config-next:
-    '.next/**',
-    'out/**',
-    'build/**',
-    'next-env.d.ts',
-  ]),
-])
+  {
+    ignores: [
+      '.next/**',
+      'out/**',
+      'build/**',
+      'next-env.d.ts',
+    ],
+  },
+  {
+    rules: {
+      // This enforces the spaces in imports: { Reservation }
+      'object-curly-spacing': ['error', 'always'],
+    },
+  },
+eslintConfigPrettier,
+];
 
-export default eslintConfig
+export default config;
