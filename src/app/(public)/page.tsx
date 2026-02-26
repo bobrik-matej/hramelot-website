@@ -23,7 +23,7 @@ export default function Home() {
 
                     {/* Members Link */}
                     <Link
-                        href="/dashboard"
+                        href="/members"
                         className="rounded-full border border-border px-6 py-3 text-sm font-semibold text-foreground hover:bg-accent transition-colors"
                     >
                         Member Portal

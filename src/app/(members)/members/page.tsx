@@ -37,7 +37,7 @@ export default async function DashboardPage() {
                         <div className="text-2xl font-bold">Manage Tables</div>
                         <p className="text-xs text-muted-foreground">Book your next campaign session</p>
                         <Link
-                            href="/dashboard/reservations"
+                            href="/members/reservations"
                             className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
                         >
                             View bookings &rarr;
@@ -54,7 +54,7 @@ export default async function DashboardPage() {
                         <div className="text-2xl font-bold">Account</div>
                         <p className="text-xs text-muted-foreground">Update your details and preferences</p>
                         <Link
-                            href="/dashboard/profile"
+                            href="/members/profile"
                             className="mt-4 inline-block text-sm font-medium text-primary hover:underline"
                         >
                             Edit profile &rarr;
