@@ -1,15 +1,12 @@
+import { db } from '@/lib/db';
+import type { Game } from '@/types/games';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 
-export default function LibraryPage() {
-  // TODO: Fetch from API
-  const games = [
-    { id: '1', name: 'Gloomhaven', type: 'Board Game', players: '1-4', available: true },
-    { id: '2', name: 'Wingspan', type: 'Board Game', players: '1-5', available: true },
-    { id: '3', name: 'Twilight Imperium', type: 'Board Game', players: '3-6', available: false },
-  ];
+export default async function LibraryPage() {
+  const games: Game[] = await db.game.findMany({ orderBy: { title: 'asc' } });
 
   return (
     <div className="container mx-auto space-y-6 py-8">
@@ -28,13 +25,13 @@ export default function LibraryPage() {
           <Card key={game.id}>
             <CardHeader>
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{game.name}</CardTitle>
+                <CardTitle className="text-lg">{game.title}</CardTitle>
                 <Badge variant={game.available ? 'default' : 'secondary'}>
                   {game.available ? 'Available' : 'Borrowed'}
                 </Badge>
               </div>
               <CardDescription>
-                {game.type} • {game.players} players
+                {game.minPlayers}–{game.maxPlayers} players
               </CardDescription>
             </CardHeader>
             <CardContent>{/* TODO: Add borrow button for MEMBER+ */}</CardContent>

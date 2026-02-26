@@ -1,33 +1,17 @@
+import { db } from '@/lib/db';
+import type { ClubEvent } from '@/types/events';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Users } from 'lucide-react';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
-export default function EventsPage() {
-  // Placeholder data - replace with DB fetch
-  const events = [
-    {
-      id: '1',
-      title: 'D&D Beginner Night',
-      description: 'Learn the basics of D&D in a welcoming environment',
-      date: '2026-03-15',
-      time: '18:00',
-      slots: 6,
-      registered: 4,
-      type: 'workshop',
-    },
-    {
-      id: '2',
-      title: 'Magic: The Gathering Draft Tournament',
-      description: 'Competitive draft tournament with prizes',
-      date: '2026-03-20',
-      time: '14:00',
-      slots: 16,
-      registered: 12,
-      type: 'tournament',
-    },
-  ];
+export default async function EventsPage() {
+  const events: ClubEvent[] = await db.event.findMany({
+    where: { published: true },
+    include: { _count: { select: { registrations: true } } },
+    orderBy: { startTime: 'asc' },
+  });
 
   return (
     <div className="container mx-auto space-y-8 py-8">
@@ -40,28 +24,25 @@ export default function EventsPage() {
         {events.map((event) => (
           <Card key={event.id}>
             <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle>{event.title}</CardTitle>
-                  <CardDescription className="mt-2">{event.description}</CardDescription>
-                </div>
-                <Badge>{event.type}</Badge>
-              </div>
+              <CardTitle>{event.title}</CardTitle>
+              {event.description && (
+                <CardDescription className="mt-2">{event.description}</CardDescription>
+              )}
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-muted-foreground flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-1">
                   <Calendar className="h-4 w-4" />
-                  <span>
-                    {event.date} at {event.time}
-                  </span>
+                  <span>{format(new Date(event.startTime), 'MMM d, yyyy · HH:mm')}</span>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  <span>
-                    {event.registered}/{event.slots} registered
-                  </span>
-                </div>
+                {event.capacity && (
+                  <div className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    <span>
+                      {event._count?.registrations ?? 0}/{event.capacity} registered
+                    </span>
+                  </div>
+                )}
               </div>
               <Link href={`/events/${event.id}`}>
                 <Button className="w-full">View Details</Button>

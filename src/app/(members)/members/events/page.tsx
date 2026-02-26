@@ -1,28 +1,26 @@
-'use client';
-
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
+import type { ClubEvent } from '@/types/events';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { format } from 'date-fns';
 
-export default function MemberEventsPage() {
-  // TODO: Fetch from API with user registration status
-  const events = [
-    {
-      id: '1',
-      title: 'D&D Beginner Night',
-      date: '2026-03-15',
-      registered: false,
-      spotsLeft: 2,
+export default async function MemberEventsPage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const events: ClubEvent[] = await db.event.findMany({
+    where: { published: true },
+    include: {
+      _count: { select: { registrations: true } },
+      ...(userId
+        ? { registrations: { where: { userId }, select: { id: true, status: true } } }
+        : {}),
     },
-    {
-      id: '2',
-      title: 'MTG Draft Tournament',
-      date: '2026-03-20',
-      registered: true,
-      spotsLeft: 0,
-    },
-  ];
+    orderBy: { startTime: 'asc' },
+  });
 
   return (
     <div className="container mx-auto space-y-6 py-8">
@@ -32,31 +30,45 @@ export default function MemberEventsPage() {
       </div>
 
       <div className="space-y-4">
-        {events.map((event) => (
-          <Card key={event.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle>{event.title}</CardTitle>
-                  <CardDescription>{event.date}</CardDescription>
+        {events.map((event) => {
+          const spotsLeft = event.capacity
+            ? event.capacity - (event._count?.registrations ?? 0)
+            : Infinity;
+          const isRegistered =
+            Array.isArray(event.registrations) && event.registrations.length > 0;
+
+          return (
+            <Card key={event.id}>
+              <CardHeader>
+                <div className="flex items-start justify-between">
+                  <div>
+                    <CardTitle>{event.title}</CardTitle>
+                    <CardDescription>
+                      {format(new Date(event.startTime), 'PPp')}
+                    </CardDescription>
+                  </div>
+                  {isRegistered && <Badge>Registered</Badge>}
                 </div>
-                {event.registered && <Badge>Registered</Badge>}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between">
-                <span className="text-muted-foreground text-sm">
-                  {event.spotsLeft > 0 ? `${event.spotsLeft} spots left` : 'Full'}
-                </span>
-                <Link href={`/members/events/${event.id}/register`}>
-                  <Button disabled={event.registered || event.spotsLeft === 0}>
-                    {event.registered ? 'Already Registered' : 'Register'}
-                  </Button>
-                </Link>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted-foreground text-sm">
+                    {event.capacity
+                      ? spotsLeft > 0
+                        ? `${spotsLeft} spots left`
+                        : 'Full'
+                      : 'Open'}
+                  </span>
+                  <Link href={`/members/events/${event.id}/register`}>
+                    <Button disabled={isRegistered || spotsLeft === 0}>
+                      {isRegistered ? 'Already Registered' : 'Register'}
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );

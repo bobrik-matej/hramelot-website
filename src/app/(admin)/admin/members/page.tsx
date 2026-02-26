@@ -1,25 +1,16 @@
+import { db } from '@/lib/db';
+import type { UserProfile } from '@/types/users';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-export default function AdminMembersPage() {
-  // TODO: Fetch from API
-  const members = [
-    {
-      id: '1',
-      name: 'John Doe',
-      email: 'john@example.com',
-      role: 'MEMBER',
-      discord: 'johndoe#1234',
-    },
-    {
-      id: '2',
-      name: 'Jane Smith',
-      email: 'jane@example.com',
-      role: 'MASTER',
-      discord: 'janesmith#5678',
-    },
-  ];
+export default async function AdminMembersPage() {
+  const members: Pick<UserProfile, 'id' | 'name' | 'email' | 'image' | 'role'>[] =
+    await db.user.findMany({
+      select: { id: true, name: true, email: true, image: true, role: true },
+      orderBy: { name: 'asc' },
+    });
 
   return (
     <div className="container mx-auto space-y-6 py-8">
@@ -28,7 +19,6 @@ export default function AdminMembersPage() {
           <h1 className="text-3xl font-bold">Member Management</h1>
           <p className="text-muted-foreground">Manage users and assign roles</p>
         </div>
-        <Button>Add Member</Button>
       </div>
 
       <Card>
@@ -43,10 +33,17 @@ export default function AdminMembersPage() {
                 key={member.id}
                 className="flex items-center justify-between rounded-lg border p-4"
               >
-                <div>
-                  <p className="font-semibold">{member.name}</p>
-                  <p className="text-muted-foreground text-sm">{member.email}</p>
-                  <p className="text-muted-foreground text-xs">Discord: {member.discord}</p>
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={member.image ?? undefined} alt={member.name ?? ''} />
+                    <AvatarFallback>
+                      {(member.name ?? member.email ?? '?').charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold">{member.name ?? '—'}</p>
+                    <p className="text-muted-foreground text-sm">{member.email}</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge>{member.role}</Badge>
