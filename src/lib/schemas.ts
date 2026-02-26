@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // --- Enums (Matching Prisma) ---
-export const UserRoleSchema = z.enum(["USER", "MEMBER", "ADMIN"]);
+export const UserRoleSchema = z.enum(["PUBLIC", "USER", "MEMBER", "MASTER", "ADMIN"]);
 export const RegistrationStatusSchema = z.enum(["PENDING", "CONFIRMED", "WAITLIST", "CANCELLED"]);
 
 // --- User / Profile ---

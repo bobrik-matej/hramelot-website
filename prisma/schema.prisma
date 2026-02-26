@@ -57,6 +57,9 @@ model User {
   reservations      Reservation[]      @relation("ReservedBy")
   organizedSessions GameSession[]      @relation("Organizer")
   registrations     GameRegistration[]
+  memberApplication MemberApplication?
+  eventRegistrations EventRegistration[]
+  borrowRecords     BorrowRecord[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -152,8 +155,8 @@ model GameSession {
   maxPlayers  Int     @default(5)
 
   // Link to the physical reservation
-  reservationId String      @unique
-  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  reservationId String?      @unique
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: Cascade)
 
   // Link to the Master/organizer
   organizerId String
@@ -183,4 +186,95 @@ model GameRegistration {
   createdAt DateTime @default(now())
 
   @@unique([gameSessionId, userId]) // Prevent double signup
+}
+enum ApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum BorrowStatus {
+  BORROWED
+  RETURNED
+  OVERDUE
+}
+
+/// A membership application submitted by a USER to become a MEMBER.
+model MemberApplication {
+  id        String            @id @default(cuid())
+  userId    String            @unique
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status    ApplicationStatus @default(PENDING)
+  message   String?           @db.Text
+  reviewedBy String?
+  reviewNote String?          @db.Text
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
+
+/// A public event organised by admins (tournaments, game nights, etc.).
+model Event {
+  id          String   @id @default(cuid())
+  title       String
+  description String?  @db.Text
+  location    String?
+  startTime   DateTime
+  endTime     DateTime
+  capacity    Int?
+  image       String?
+  published   Boolean  @default(true)
+
+  registrations EventRegistration[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startTime])
+}
+
+/// Registration of a user for an event.
+model EventRegistration {
+  id      String              @id @default(cuid())
+  eventId String
+  event   Event               @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId  String
+  user    User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status  RegistrationStatus  @default(CONFIRMED)
+  createdAt DateTime          @default(now())
+
+  @@unique([eventId, userId])
+}
+
+/// A board game in the club's lending library.
+model Game {
+  id          String  @id @default(cuid())
+  title       String
+  description String? @db.Text
+  image       String?
+  bggId       String? // BoardGameGeek ID
+  minPlayers  Int     @default(2)
+  maxPlayers  Int     @default(4)
+  available   Boolean @default(true)
+
+  borrows BorrowRecord[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+/// A record of a user borrowing a game from the library.
+model BorrowRecord {
+  id         String       @id @default(cuid())
+  gameId     String
+  game       Game         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status     BorrowStatus @default(BORROWED)
+  borrowedAt DateTime     @default(now())
+  dueAt      DateTime?
+  returnedAt DateTime?
+  condition  String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
