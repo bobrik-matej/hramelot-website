@@ -7,7 +7,6 @@ const connectionString = `${process.env.DIRECT_URL}`;
 const adapter = new PrismaPg({connectionString});
 
 declare global {
-    // eslint-disable-next-line no-var
     var prisma: PrismaClient | undefined;
 }
 

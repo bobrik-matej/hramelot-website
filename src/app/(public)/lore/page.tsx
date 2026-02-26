@@ -48,7 +48,7 @@ export default function LorePage() {
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold mb-2">The Dungeon Masters' Circle</h3>
+                                <h3 className="text-lg font-semibold mb-2">The Dungeon Masters&apos; Circle</h3>
                                 <p className="text-muted-foreground">
                                     The keepers of stories, weavers of fate, and architects of worlds.
                                 </p>
@@ -70,7 +70,7 @@ export default function LorePage() {
                                 </p>
                             </div>
                             <div>
-                                <h3 className="text-lg font-semibold mb-2">The Dragon's Den</h3>
+                                <h3 className="text-lg font-semibold mb-2">The Dragon&apos;s Den</h3>
                                 <p className="text-muted-foreground">
                                     An intimate chamber for smaller parties, decorated with draconic memorabilia.
                                 </p>
@@ -96,7 +96,7 @@ export default function LorePage() {
                                 <h3 className="text-lg font-semibold mb-2">The Curse of the Missing Dice</h3>
                                 <p className="text-muted-foreground">
                                     Every veteran knows: dice that roll well have a habit of disappearing. Some
-                                    say they're claimed by the Dice Goblin, a mischievous spirit that haunts all
+                                    say they&apos;re claimed by the Dice Goblin, a mischievous spirit that haunts all
                                     gaming spaces.
                                 </p>
                             </div>

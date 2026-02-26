@@ -82,7 +82,7 @@ export default function LocationPage() {
                         <CardTitle>How to Get Here</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2 text-sm text-muted-foreground">
-                        <p><strong>By Tram:</strong> Lines X, Y - Stop "Name"</p>
+                        <p><strong>By Tram:</strong> Lines X, Y - Stop &quot;Name&quot;</p>
                         <p><strong>By Bus:</strong> Lines XX, YY</p>
                         <p><strong>Parking:</strong> Street parking available nearby</p>
                     </CardContent>

@@ -1,22 +1,24 @@
 # 🏰 Hramelot - Tabletop Gaming Club Portal
 
-Hramelot is a digital clubhouse for tabletop gaming. It manages physical space (table reservations) and community content (game sessions, lore, and member resources).
+Hramelot is a digital clubhouse for tabletop gaming. It manages physical space (table reservations) and community
+content (game sessions, lore, and member resources).
 
 ## 🔑 User Roles & Permissions
 
 The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
-| Role | Access Level | Key Capabilities |
-| :--- | :--- | :--- |
-| **PUBLIC** | `/` | View events, lore, games, and join info. |
-| **USER** | `/members` | Signed in. Register for public events/sessions. |
-| **MEMBER** | `/members` | **Paid.** Book tables, borrow games, access resources. |
+| Role       | Access Level        | Key Capabilities                                            |
+|:-----------|:--------------------|:------------------------------------------------------------|
+| **PUBLIC** | `/`                 | View events, lore, games, and join info.                    |
+| **USER**   | `/members`          | Signed in. Register for public events/sessions.             |
+| **MEMBER** | `/members`          | **Paid.** Book tables, borrow games, access resources.      |
 | **MASTER** | `/members/organize` | **GMs.** Create sessions, manage players, priority booking. |
-| **ADMIN** | `/admin` | Full control over users, content, and system settings. |
+| **ADMIN**  | `/admin`            | Full control over users, content, and system settings.      |
 
 ## 🗺️ Route Structure
 
 ### 🌐 Public (`/`)
+
 *SEO-optimized, publicly accessible*
 
 ```
@@ -35,9 +37,11 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ```
 
 ### 👤 Member Area (`/members`)
+
 *Replaces the traditional "Dashboard" to focus on community identity.*
 
 **USER Pages** (Signed in via Discord)
+
 ```
 /members                         # USER+ landing page
 /members/profile                 # Personal profile
@@ -51,6 +55,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 **MEMBER Pages** (Paid membership)
 *Inherits USER pages, plus:*
+
 ```
 /members/reservations            # Book tables ⭐ PRIMARY
   /members/reservations/new      # Create table booking
@@ -78,6 +83,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 
 **MASTER Pages** (Game Masters / Organizers)
 *Runs 2+ sessions/month - elevated privileges. Inherits MEMBER pages, plus:*
+
 ```
 /members/organize                # Master control center
 /members/organize/sessions       # My organized sessions
@@ -111,6 +117,7 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ```
 
 ### 👑 Admin (`/admin`)
+
 *Full club control. Inherits all previous pages, plus:*
 
 ```
@@ -208,17 +215,25 @@ The system uses a 5-tier role hierarchy synchronized with **Discord roles**:
 ## 🛠️ Key Design Decisions
 
 ### 1. `/members` vs `/dashboard`
-We chose `/members` as the root for authenticated users because Hramelot is a social club, not a utility. This aligns with our SEO strategy and reinforces the sense of belonging for our players.
+
+We chose `/members` as the root for authenticated users because Hramelot is a social club, not a utility. This aligns
+with our SEO strategy and reinforces the sense of belonging for our players.
 
 ### 2. Reservation vs. Game Session
+
 To maintain flexibility, we distinguish between physical space and game content:
+
 - **Reservation:** A logistical entity. A Member books a specific **Table** for a time block.
-- **GameSession:** A content layer. Attached to a Reservation if the game is public, allowing others to see system details and register.
+- **GameSession:** A content layer. Attached to a Reservation if the game is public, allowing others to see system
+  details and register.
 
 ### 3. Discord-First Authentication
-Roles are managed via Discord. When a user signs in, the system syncs their Discord Guild roles to their local `UserRole` to determine permissions instantly.
+
+Roles are managed via Discord. When a user signs in, the system syncs their Discord Guild roles to their local
+`UserRole` to determine permissions instantly.
 
 ## 💾 Tech Stack
+
 - **Framework:** Next.js 15 (App Router)
 - **Auth:** Auth.js (NextAuth) with Discord Provider
 - **Database:** PostgreSQL via Prisma ORM
@@ -226,31 +241,69 @@ Roles are managed via Discord. When a user signs in, the system syncs their Disc
 
 ## 🚀 Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- **Node.js** 20+
+- **npm** (or pnpm/yarn)
+- A **Supabase** project with a PostgreSQL database
+- A **Discord OAuth application** (for Auth.js authentication)
+
+### 1. Install dependencies
+
+```bash
+npm install
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file in the project root. Required variables:
+
+```env
+# Supabase — use the direct connection string (port 5432), not the pooler
+DATABASE_URL="postgresql://..."
+
+# Auth.js
+AUTH_SECRET="your-secret"
+
+# Discord OAuth (from Discord Developer Portal)
+AUTH_DISCORD_ID="your-discord-client-id"
+AUTH_DISCORD_SECRET="your-discord-client-secret"
+```
+
+> ⚠️ Use the **direct connection** URL from Supabase (port `5432`) for schema operations. The pooler (port `6543`) can
+> be used at runtime but will cause issues with `prisma db push`.
+
+### 3. Set up the database
+
+Push the Prisma schema to your Supabase database and seed it with test data:
+
+```bash
+npm run db:push   # applies schema
+npm run db:seed   # seeds tables, users, sessions, events, games
+```
+
+Or do both at once with a full reset:
+
+```bash
+npm run db:reset  # wipe → push schema → seed
+```
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## 📚 Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+### 🗄️ Database Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## 🚢 Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme).
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Command            | Description                                                 |
+|:-------------------|:------------------------------------------------------------|
+| `npm run db:seed`  | Populate the DB with test data                              |
+| `npm run db:push`  | Apply `schema.prisma` changes to the DB                     |
+| `npm run db:wipe`  | Delete all data (keeps schema)                              |
+| `npm run db:reset` | Wipe → push schema → seed *(most common during WIP)*        |
+| `npm run db:fresh` | Nuclear reset via `prisma migrate reset --force`, then seed |

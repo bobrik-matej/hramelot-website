@@ -8,7 +8,7 @@ export default function Home() {
                     Hramelot Košice
                 </h1>
                 <p className="mt-6 text-lg leading-8 text-muted-foreground">
-                    Your local home for board games and TTRPGs. Whether you're a pro or a beginner, there’s a seat for you.
+                    Your local home for board games and TTRPGs. Whether you&apos;re a pro or a beginner, there&apos;s a seat for you.
                     Pick a game from our schedule or sign in to reserve your table.
                 </p>
 

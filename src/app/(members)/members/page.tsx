@@ -86,7 +86,7 @@ export default async function DashboardPage() {
                     <p className="text-muted-foreground">
                         No upcoming events found. Why not <Link href="/calendar"
                                                                 className="text-primary hover:underline">check the
-                        calendar</Link> to see what's happening?
+                        calendar</Link> to see what&apos;s happening?
                     </p>
                 </div>
             </section>

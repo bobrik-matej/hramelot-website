@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "prisma generate && next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "postinstall": "prisma generate",
     "db:seed": "tsx prisma/seed.ts",
-    "db:push": "prisma db push && npm run db:seed"
+    "db:wipe": "prisma db execute --file prisma/wipe.sql --schema prisma/schema.prisma",
+    "db:push": "prisma db push",
+    "db:reset": "npm run db:wipe && npm run db:push && npm run db:seed",
+    "db:fresh": "prisma migrate reset --force && npm run db:seed"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
@@ -49,7 +52,7 @@
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^10.0.0",
+    "eslint": "^9.15.0",
     "eslint-config-next": "^16.1.6",
     "postcss": "^8.5.6",
     "prisma": "^7.4.1",

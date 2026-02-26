@@ -5,7 +5,7 @@ export default function AboutPage() {
         <div className="container mx-auto py-8 space-y-8">
             <div className="text-center space-y-2">
                 <h1 className="text-4xl font-bold">About Hramelot</h1>
-                <p className="text-muted-foreground">Košice's premier tabletop gaming community</p>
+                <p className="text-muted-foreground">Košice&apos;s premier tabletop gaming community</p>
             </div>
 
             <Card>
