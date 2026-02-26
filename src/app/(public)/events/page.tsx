@@ -1,6 +1,13 @@
+import type { Metadata } from 'next';
 import { db } from '@/lib/db';
 import type { ClubEvent } from '@/types/events';
 import { EventCard } from '@/components/events/EventCard';
+
+export const metadata: Metadata = {
+  title: 'Upcoming Events | Hramelot Košice',
+  description:
+    'Browse and register for upcoming public gaming events at Hramelot in Košice. Board game nights, D&D sessions, tournaments, and more.',
+};
 
 export default async function EventsPage() {
   const events: ClubEvent[] = await db.event.findMany({
