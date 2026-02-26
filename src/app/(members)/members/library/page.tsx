@@ -1,7 +1,6 @@
 import { db } from '@/lib/db';
 import type { Game } from '@/types/games';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { GameCard } from '@/components/games/GameCard';
 import { Input } from '@/components/ui/input';
 import { Search } from 'lucide-react';
 
@@ -22,20 +21,9 @@ export default async function LibraryPage() {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {games.map((game) => (
-          <Card key={game.id}>
-            <CardHeader>
-              <div className="flex items-start justify-between">
-                <CardTitle className="text-lg">{game.title}</CardTitle>
-                <Badge variant={game.available ? 'default' : 'secondary'}>
-                  {game.available ? 'Available' : 'Borrowed'}
-                </Badge>
-              </div>
-              <CardDescription>
-                {game.minPlayers}–{game.maxPlayers} players
-              </CardDescription>
-            </CardHeader>
-            <CardContent>{/* TODO: Add borrow button for MEMBER+ */}</CardContent>
-          </Card>
+          <GameCard key={game.id} game={game}>
+            {/* TODO: Add borrow button for MEMBER+ */}
+          </GameCard>
         ))}
       </div>
     </div>

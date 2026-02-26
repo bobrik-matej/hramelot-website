@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import CalendarView, { type CalendarItem } from './CalendarView';
+import CalendarView, { type CalendarItem } from '@/components/calendar/CalendarView';
 import type { ClubEvent } from '@/types/events';
 import type { GameSession } from '@/types/sessions';
 
