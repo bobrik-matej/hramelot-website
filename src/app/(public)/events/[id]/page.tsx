@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import { db } from '@/lib/db';
+import { auth } from '@/lib/auth';
 import type { ClubEvent } from '@/types/events';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Calendar, Users, MapPin } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
-import Link from 'next/link';
+import { EventRegisterButton } from '@/components/events/EventRegisterButton';
 
 export async function generateMetadata({
   params,
@@ -25,12 +25,27 @@ export async function generateMetadata({
 export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  const event: ClubEvent | null = await db.event.findUnique({
-    where: { id, published: true },
-    include: { _count: { select: { registrations: true } } },
-  });
+  const [event, session] = await Promise.all([
+    db.event.findUnique({
+      where: { id, published: true },
+      include: { _count: { select: { registrations: true } } },
+    }) as Promise<ClubEvent | null>,
+    auth(),
+  ]);
 
   if (!event) return notFound();
+
+  const userId = session?.user?.id;
+  const registrationCount = event._count?.registrations ?? 0;
+  const isFull = event.capacity != null && registrationCount >= event.capacity;
+
+  let isRegistered = false;
+  if (userId) {
+    const existing = await db.eventRegistration.findUnique({
+      where: { eventId_userId: { eventId: id, userId } },
+    });
+    isRegistered = !!existing;
+  }
 
   return (
     <div className="container mx-auto space-y-6 py-8">
@@ -66,11 +81,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
 
-          <Link href="/members/events">
-            <Button size="lg" className="w-full md:w-auto">
-              Register for Event
-            </Button>
-          </Link>
+          <EventRegisterButton eventId={event.id} isFull={isFull} initialIsRegistered={isRegistered} />
         </CardContent>
       </Card>
     </div>
