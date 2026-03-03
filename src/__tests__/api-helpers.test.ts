@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { roleAtLeast, parsePagination, parseSorting } from '@/lib/api-helpers';
 
 // api-helpers imports next/server and @/lib/auth — mock those so we can
