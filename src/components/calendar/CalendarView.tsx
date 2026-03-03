@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { format, isSameDay } from 'date-fns';
+import Link from 'next/link';
 
 export type CalendarItem = {
   id: string;
@@ -114,9 +115,17 @@ export default function CalendarView({ items }: CalendarViewProps) {
                         ? `${item.spotsLeft}/${item.totalSpots} spots left`
                         : 'Full'}
                     </span>
-                    <Button size="sm" disabled={item.spotsLeft === 0}>
-                      {item.spotsLeft === 0 ? 'Full' : 'Register'}
-                    </Button>
+                    {item.spotsLeft === 0 ? (
+                      <Button size="sm" disabled>
+                        Full
+                      </Button>
+                    ) : (
+                      <Link
+                        href={item.type === 'event' ? `/events/${item.id}` : '/members/sessions'}
+                      >
+                        <Button size="sm">Register</Button>
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}

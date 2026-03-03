@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar, Users, MapPin } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { format } from 'date-fns';
+import Link from 'next/link';
 
 export async function generateMetadata({
   params,
@@ -65,9 +66,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             )}
           </div>
 
-          <Button size="lg" className="w-full md:w-auto">
-            Register for Event
-          </Button>
+          <Link href="/members/events">
+            <Button size="lg" className="w-full md:w-auto">
+              Register for Event
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>
