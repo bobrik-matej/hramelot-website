@@ -2,10 +2,9 @@ import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import type { ClubEvent } from '@/types/events';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import Link from 'next/link';
 import { format } from 'date-fns';
+import { EventRegisterButton } from '@/components/events/EventRegisterButton';
 
 export default async function MemberEventsPage() {
   const session = await auth();
@@ -59,11 +58,11 @@ export default async function MemberEventsPage() {
                         : 'Full'
                       : 'Open'}
                   </span>
-                  <Link href={`/members/events/${event.id}/register`}>
-                    <Button disabled={isRegistered || spotsLeft === 0}>
-                      {isRegistered ? 'Already Registered' : 'Register'}
-                    </Button>
-                  </Link>
+                  <EventRegisterButton
+                    eventId={event.id}
+                    isFull={spotsLeft === 0}
+                    initialIsRegistered={isRegistered}
+                  />
                 </div>
               </CardContent>
             </Card>
