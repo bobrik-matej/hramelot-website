@@ -33,22 +33,46 @@ export default function CalendarView({ items }: CalendarViewProps) {
     <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
       {/* Calendar Section */}
       <Card className="w-full">
-        <CardHeader>
+        <CardHeader className="pb-3">
           <CardTitle>Select a Date</CardTitle>
           <CardDescription>Click on a date to see scheduled sessions</CardDescription>
         </CardHeader>
-        <CardContent className="flex justify-center">
-          <Calendar
-            mode="single"
-            selected={selectedDate}
-            onSelect={setSelectedDate}
-            className="w-full rounded-md border"
-            modifiers={{ hasEvent: itemDates }}
-            modifiersClassNames={{
-              hasEvent:
-                'relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1.5 after:h-1.5 after:bg-orange-500 after:rounded-full',
-            }}
-          />
+
+        <CardContent className="p-3 sm:p-6">
+          <div className="flex justify-center">
+            <div className="w-full max-w-85">
+              <Calendar
+                mode="single"
+                selected={selectedDate}
+                onSelect={setSelectedDate}
+                showOutsideDays
+                className="rounded-md border"
+                classNames={{
+                  months: 'flex flex-col space-y-4',
+                  month: 'space-y-4',
+                  caption: 'flex justify-center pt-1 relative items-center',
+                  caption_label: 'text-sm font-medium',
+                  nav: 'space-x-1 flex items-center',
+                  nav_button: 'h-8 w-8 bg-transparent p-0 opacity-50 hover:opacity-100',
+                  table: 'w-full border-collapse space-y-1',
+                  head_row: 'flex',
+                  head_cell: 'text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]',
+                  row: 'flex w-full mt-2',
+                  cell: 'text-center text-sm p-0 relative',
+                  day: 'h-9 w-9 p-0 font-normal aria-selected:opacity-100',
+                  day_selected:
+                    'bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground',
+                  day_today: 'bg-accent text-accent-foreground',
+                  day_outside: 'text-muted-foreground opacity-50',
+                }}
+                modifiers={{ hasEvent: itemDates }}
+                modifiersClassNames={{
+                  hasEvent:
+                    'relative after:absolute after:bottom-1 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-orange-500 after:rounded-full',
+                }}
+              />
+            </div>
+          </div>
         </CardContent>
       </Card>
 
@@ -86,7 +110,9 @@ export default function CalendarView({ items }: CalendarViewProps) {
 
                   <div className="flex items-center justify-between">
                     <span className="text-muted-foreground text-xs">
-                      {item.spotsLeft > 0 ? `${item.spotsLeft}/${item.totalSpots} spots left` : 'Full'}
+                      {item.spotsLeft > 0
+                        ? `${item.spotsLeft}/${item.totalSpots} spots left`
+                        : 'Full'}
                     </span>
                     <Button size="sm" disabled={item.spotsLeft === 0}>
                       {item.spotsLeft === 0 ? 'Full' : 'Register'}

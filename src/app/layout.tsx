@@ -25,7 +25,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`flex min-h-screen flex-col ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`flex min-h-dvh flex-col ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Providers>
           <Navbar />
