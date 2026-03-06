@@ -4,6 +4,27 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { db } from '@/lib/db';
 import type { UserRole } from '@prisma/client';
 
+// Discord API response types
+interface DiscordUser {
+  id: string;
+  username: string;
+  discriminator: string;
+  global_name?: string | null;
+  avatar?: string | null;
+  email?: string | null;
+}
+
+export interface DiscordGuildMember {
+  user?: DiscordUser;
+  nick?: string | null;
+  avatar?: string | null;
+  roles: string[];
+  joined_at: string;
+  pending?: boolean;
+  permissions?: string;
+  communication_disabled_until?: string | null;
+}
+
 // Validate environment variables
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
@@ -17,7 +38,7 @@ if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
 }
 
 // Helper function to fetch Discord guild member data
-async function fetchDiscordGuildMember(accessToken: string) {
+async function fetchDiscordGuildMember(accessToken: string): Promise<DiscordGuildMember | null> {
   if (!DISCORD_GUILD_ID) {
     console.warn('⚠️ DISCORD_GUILD_ID is not set - role sync disabled');
     return null;
@@ -43,7 +64,7 @@ async function fetchDiscordGuildMember(accessToken: string) {
       return null;
     }
 
-    const data = await response.json();
+    const data = (await response.json()) as DiscordGuildMember;
     console.log('✅ Fetched Discord member data:', {
       userId: data.user?.id,
       roles: data.roles?.length || 0,
@@ -56,7 +77,7 @@ async function fetchDiscordGuildMember(accessToken: string) {
 }
 
 // Helper function to map Discord roles to app roles
-function mapDiscordRolesToAppRole(discordRoles: string[]): UserRole {
+export function mapDiscordRolesToAppRole(discordRoles: string[]): UserRole {
   console.log('🔍 Mapping roles:', {
     discordRoles,
     adminRoleId: DISCORD_ADMIN_ROLE_ID,
@@ -101,23 +122,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         hasAccessToken: !!account?.access_token,
       });
 
-      // Sync Discord roles on sign-in
+      // Sync Discord roles on sign-in for returning users (user already exists in DB).
+      // New users are handled in events.linkAccount, which fires after the adapter
+      // creates the user and links the account — making db.user.update safe to call.
       if (account?.provider === 'discord' && account.access_token && user?.id) {
         try {
-          const guildMember = await fetchDiscordGuildMember(account.access_token);
+          const existingUser = await db.user.findUnique({ where: { id: user.id } });
 
-          if (guildMember?.roles && Array.isArray(guildMember.roles)) {
-            const appRole = mapDiscordRolesToAppRole(guildMember.roles);
+          if (existingUser) {
+            const guildMember = await fetchDiscordGuildMember(account.access_token);
 
-            await db.user.update({
-              where: { id: user.id },
-              data: { role: appRole },
-            });
+            if (guildMember?.roles && Array.isArray(guildMember.roles)) {
+              const appRole = mapDiscordRolesToAppRole(guildMember.roles);
 
-            console.log(`✅ Synced roles for ${user.email}: ${appRole}`);
-          } else {
-            console.warn(`⚠️ User ${user.email} not in guild or has no roles`);
+              await db.user.update({
+                where: { id: user.id },
+                data: { role: appRole },
+              });
+
+              console.log(`✅ Synced roles for ${user.email}: ${appRole}`);
+            } else {
+              console.warn(`⚠️ User ${user.email} not in guild or has no roles`);
+            }
           }
+          // If user doesn't exist yet, role assignment is deferred to events.linkAccount
         } catch (error) {
           console.error('❌ Failed to sync Discord roles:', error);
           // Don't block sign-in on role sync failure
@@ -135,6 +163,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.role = (user as any).role; // Mapping the DB role to the session
       }
       return session;
+    },
+  },
+  events: {
+    async linkAccount({ user, account }) {
+      // Fires after a new OAuth account is linked to a (newly created) user.
+      // This is the correct place to assign the initial Discord role because the
+      // user record now exists in the DB and the account's access_token is available.
+      if (account.provider === 'discord' && account.access_token) {
+        try {
+          const guildMember = await fetchDiscordGuildMember(account.access_token);
+
+          if (guildMember?.roles && Array.isArray(guildMember.roles)) {
+            const appRole = mapDiscordRolesToAppRole(guildMember.roles);
+
+            await db.user.update({
+              where: { id: user.id },
+              data: { role: appRole },
+            });
+
+            console.log(`✅ Assigned initial Discord role for new user ${user.email}: ${appRole}`);
+          } else {
+            console.warn(`⚠️ New user ${user.email} not in guild or has no roles`);
+          }
+        } catch (error) {
+          console.error('❌ Failed to assign initial Discord role:', error);
+        }
+      }
     },
   },
   debug: process.env.NODE_ENV === 'development',
