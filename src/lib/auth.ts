@@ -9,6 +9,7 @@ const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID;
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET;
 const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID;
 const DISCORD_ADMIN_ROLE_ID = process.env.DISCORD_ADMIN_ROLE_ID;
+const DISCORD_MASTER_ROLE_ID = process.env.DISCORD_MASTER_ROLE_ID;
 const DISCORD_MEMBER_ROLE_ID = process.env.DISCORD_MEMBER_ROLE_ID;
 
 if (!DISCORD_CLIENT_ID || !DISCORD_CLIENT_SECRET) {
@@ -59,11 +60,16 @@ function mapDiscordRolesToAppRole(discordRoles: string[]): UserRole {
   console.log('🔍 Mapping roles:', {
     discordRoles,
     adminRoleId: DISCORD_ADMIN_ROLE_ID,
+    masterRoleId: DISCORD_MASTER_ROLE_ID,
     memberRoleId: DISCORD_MEMBER_ROLE_ID,
   });
 
   if (DISCORD_ADMIN_ROLE_ID && discordRoles.includes(DISCORD_ADMIN_ROLE_ID)) {
     return 'ADMIN';
+  }
+
+  if (DISCORD_MASTER_ROLE_ID && discordRoles.includes(DISCORD_MASTER_ROLE_ID)) {
+    return 'MASTER';
   }
 
   if (DISCORD_MEMBER_ROLE_ID && discordRoles.includes(DISCORD_MEMBER_ROLE_ID)) {
