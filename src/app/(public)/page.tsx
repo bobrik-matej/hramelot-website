@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -9,9 +10,23 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center justify-center px-6 py-24">
-      <main className="max-w-3xl text-center">
-        <h1 className="text-foreground text-5xl font-bold tracking-tight sm:text-6xl">
+    <div className="bg-background relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24">
+      {/* Dragon background — upper half, right side, 2/3 width (full width on mobile) */}
+      <div className="pointer-events-none absolute right-0 top-0 h-1/2 w-full sm:w-2/3">
+        <Image
+          src="/images/hramelot-dragon-background.webp"
+          alt=""
+          aria-hidden="true"
+          fill
+          className="object-cover object-center"
+          priority
+        />
+        {/* Gradient at the bottom to smoothly blend into the page background */}
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-b from-transparent to-[#120f0c]" />
+      </div>
+
+      <main className="relative z-10 max-w-3xl text-center">
+        <h1 className="text-foreground text-5xl font-bold tracking-tight [text-shadow:0_2px_12px_rgba(0,0,0,0.9),_0_0_4px_rgba(0,0,0,0.8)] sm:text-6xl">
           Hramelot Košice
         </h1>
         <p className="text-muted-foreground mt-6 text-lg leading-8">
