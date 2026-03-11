@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // Assuming you have some UI components
 import { BookOpen, CalendarDays, User } from 'lucide-react';
-import ExampleUsage from '@/components/example-usage';
 import { auth } from '@/lib/auth';
 
 export default async function DashboardPage() {
@@ -24,9 +23,6 @@ export default async function DashboardPage() {
           <span className="text-primary font-semibold">{user.role || 'Member'}</span> of Hramelot.
         </p>
       </header>
-
-      <ExampleUsage />
-
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Quick Actions / Stats */}
         <Card>
