@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -9,8 +10,20 @@ export const metadata: Metadata = {
 
 export default function Home() {
   return (
-    <div className="bg-background flex min-h-screen flex-col items-center justify-center px-6 py-24">
-      <main className="max-w-3xl text-center">
+    <div className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-24">
+      <Image
+        src="/images/hramelot-dragon-background.webp"
+        alt=""
+        fill
+        className="object-cover"
+        priority
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-x-0 bottom-0 h-48 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, #120f0c)' }}
+      />
+      <main className="relative z-10 max-w-3xl text-center">
         <h1 className="text-foreground text-5xl font-bold tracking-tight sm:text-6xl">
           Hramelot Košice
         </h1>
