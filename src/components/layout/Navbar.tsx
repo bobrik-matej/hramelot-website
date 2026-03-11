@@ -32,15 +32,21 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const userRole = getUserRole(session);
 
-  // Simplified top-level navigation
-  const getTopLevelNav = () => {
-    return [
-      { href: '/calendar', label: 'Calendar' },
-      { href: '/guide', label: 'Guide' },
-      { href: '/lore', label: 'Lore' },
-      { href: '/about', label: 'About' },
-    ];
-  };
+  // "Explore" dropdown — content & discovery pages
+  const exploreDropdown = [
+    { href: '/events', label: 'Events', description: 'Upcoming public events' },
+    { href: '/calendar', label: 'Calendar', description: 'Full event calendar' },
+    { href: '/games', label: 'Games', description: 'Our game library' },
+    { href: '/lore', label: 'Lore', description: 'Club history & stories' },
+  ];
+
+  // "Club" dropdown — informational / community pages
+  const clubDropdown = [
+    { href: '/about', label: 'About Us', description: 'Our mission & values' },
+    { href: '/location', label: 'Find Us', description: 'Address & opening hours' },
+    { href: '/guide', label: 'Guide', description: "Beginner's guide to gaming" },
+    { href: '/join', label: 'Join Us', description: 'Become a member' },
+  ];
 
   // Grouped member navigation for dropdown
   const getMemberDropdownItems = () => {
@@ -69,7 +75,6 @@ const Navbar = () => {
     };
   };
 
-  const topLevelNav = getTopLevelNav();
   const memberDropdown = getMemberDropdownItems();
 
   return (
@@ -94,14 +99,33 @@ const Navbar = () => {
           <div className="hidden md:flex md:items-center md:space-x-1">
             <NavigationMenu>
               <NavigationMenuList>
-                {/* Top-level links */}
-                {topLevelNav.map((item) => (
-                  <NavigationMenuItem key={item.href}>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
-                      <Link href={item.href}>{item.label}</Link>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                ))}
+                {/* Explore Dropdown */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Explore</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-100 gap-3 p-4 md:w-125 md:grid-cols-2">
+                      {exploreDropdown.map((item) => (
+                        <ListItem key={item.href} href={item.href} title={item.label}>
+                          {item.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                {/* Club Dropdown */}
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Club</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-100 gap-3 p-4 md:w-125 md:grid-cols-2">
+                      {clubDropdown.map((item) => (
+                        <ListItem key={item.href} href={item.href} title={item.label}>
+                          {item.description}
+                        </ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
 
                 {/* Members Dropdown (if authenticated) */}
                 {memberDropdown && (
@@ -208,12 +232,30 @@ const Navbar = () => {
       {isOpen && (
         <div className="border-border border-t md:hidden">
           <div className="space-y-3 px-4 py-3">
-            {/* Public links */}
-            {topLevelNav.map((item) => (
+            {/* Explore links */}
+            <div className="text-muted-foreground pb-1 text-xs font-semibold tracking-wider uppercase">
+              Explore
+            </div>
+            {exploreDropdown.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="text-muted-foreground hover:text-foreground block text-base font-medium transition-colors"
+                className="text-muted-foreground hover:text-foreground block pl-3 text-base font-medium transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            {/* Club links */}
+            <div className="text-muted-foreground pt-3 pb-1 text-xs font-semibold tracking-wider uppercase">
+              Club
+            </div>
+            {clubDropdown.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="text-muted-foreground hover:text-foreground block pl-3 text-base font-medium transition-colors"
                 onClick={() => setIsOpen(false)}
               >
                 {item.label}

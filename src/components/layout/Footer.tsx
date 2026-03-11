@@ -22,16 +22,16 @@ const Footer = () => {
         { href: '/events', label: 'Events' },
         { href: '/games', label: 'Games' },
         { href: '/lore', label: 'Lore' },
-        { href: '/guide', label: 'Guide' },
       ],
     });
 
-    // Column 2: About (always visible)
+    // Column 2: Club (always visible)
     sections.push({
-      title: 'About',
+      title: 'Club',
       links: [
         { href: '/about', label: 'About Us' },
-        { href: '/location', label: 'Location' },
+        { href: '/location', label: 'Find Us' },
+        { href: '/guide', label: 'Guide' },
         { href: '/join', label: 'Join Us' },
       ],
     });
